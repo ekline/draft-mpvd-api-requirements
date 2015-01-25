@@ -11,40 +11,56 @@
 //
 // The pvd_index_t must remain valid until a disconnection or
 // disassociation event occurs, after which the pvd_index_t MUST NOT
-// be recycled to refer to a different PVD, but may or may not be
-// reused later to refer to the same PVD when re{attaching,connection,associating}
-// at some point in the future.
+// be recycled to refer to a different PVD so long as there remain
+// any identifiable references to it (e.g. a process or thread still
+// has this PVD index set as its default).
+//
+// Applications explicitly specifying PVD indices to PVD-aware
+// functions are not readily identifiable (indeed an application
+// could progressively walk the PVD index space attempting various
+// function calls without ever having received any indication from
+// the system that a given index was valid).  In order to account for
+// this, PVD indices SHOULD NOT be recycled, to the extent possible.
+// One acceptable implementation approach is to assign every new PVD
+// context a strictly monotically increasing index, such that any
+// specific index is not reused until the unsigned integer space has
+// been completely exhausted, before restarting again from 1. 
 typedef pvd_index_t unsigned int;
 
-// The value PVD_INDEX_UNSPEC is used to indicate that no specific
-// PVD is specified but that the operating system should select the
-// the current "default" PVD at the time of invocation of any specific
-// PVD-aware function call.
+// The value PVD_INDEX_INVALID is used to indicate no specific PVD.
 //
-// The definition of "default" is implementation dependent, and may freely
-// change between PVD-aware function invocations over the lifetime of a
-// process.
-//
-// NOTE: PVD_INDEX_UNSPEC specifically DOES NOT mean "all PVDs".  It
-// refers to only one PVD at a time, whatever the implementation defines
-// as an appropriate default.
+// Depending on the context it may indicate that the system does not
+// implement support for the Provisioning Domain API, an error, or
+// a signal to "clear" previous PVD index state.
+#define PVD_INDEX_INVALID (pvd_index_t)0
+
+// PVD_INDEX_UNSPEC is define to be identically valued to
+// PVD_INDEX_INVALID, but is provided for use where readability is
+// improved (i.e. when PVD_INDEX_INVALID may be returned, but there
+// is no error condition being signalled by this return value).
 #define PVD_INDEX_UNSPEC (pvd_index_t)0
 
 // Retrieve the current "default" PVD.  If the return type is
-// PVD_INDEX_UNSPEC there is no PVD accessible to this process at this
-// time.
-pvd_index_t pvd_current_default_index();
-// Same as above, but operates at a per-thread level.
-pvd_index_t pvd_thread_current_default_index();
+// PVD_INDEX_INVALID there may be no PVD accessible to this process
+// at this time or no system support for this API.
+//
+// These values are used by PVD-aware function calls when a PVD index
+// is not explicitly specified.
+pvd_index_t pvd_current_system_default();
 
-// Get/Set the default PVD to be used for this process in the absence
-// of explicitly specified PVD indices.
-pvd_index_t pvd_get_index();
-int pvd_set_index(pvd_index_t);  // 0 or -1 && errno = EFOO
+// Same as above, but operates at a per-process level.  If no
+// process-specific default has been set this MUST return the value
+// of a call to pvd_current_system_default().
+pvd_index_t pvd_current_process_default();
 
-// Same as above, but operates at a per-thread level.
-pvd_index_t pvd_thread_get_index();
-int pvd_thread_set_index(pvd_index_t);  // 0 or -1 && errno = EFOO
+// Same as above, but operates at a per-thread level.  If no
+// thread-specific default has been set this MUST return the value
+// of a call to pvd_current_process_default().
+pvd_index_t pvd_current_thread_default();
+
+int pvd_set_system_default(pvd_index_t);  // 0 or -1 && errno = EFOO
+int pvd_set_process_default(pvd_index_t);  // 0 or -1 && errno = EFOO
+int pvd_set_thread_default(pvd_index_t);  // 0 or -1 && errno = EFOO
 
 // Any function that is not easily extended to support a pvd_index_t
 // argument, but for which the underlying operating system understands
