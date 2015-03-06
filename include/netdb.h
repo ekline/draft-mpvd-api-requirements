@@ -1,5 +1,5 @@
 
 #include <net/pvd.h>
 
-getaddrinfo
-getnameinfo
+getaddrinfo w/ pvd_index_t argument
+getnameinfo w/ pvd_index_t argument

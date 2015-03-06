@@ -42,8 +42,8 @@
  * accept()
  *
  * If a listening socket is associated with a single PVD, e.g. via a prior
- * call to pvd_set_index() or setsockopt(SOL_SOCKET, SO_PVDINDEX, ...) then
- * traffic arriving from other provisioning domains MUST NOT cause a new
+ * call to pvd_set_*_default(...) or setsockopt(SOL_SOCKET, SO_PVDINDEX, ...)
+ * then traffic arriving from other provisioning domains MUST NOT cause a new
  * connection.
  *
  * Furthermore, whether or not a listening socket has a specified PVD, the 
