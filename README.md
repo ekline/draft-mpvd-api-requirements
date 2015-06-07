@@ -1,4 +1,4 @@
 pvd_api
 =======
 
-notes for IETF mif working group Provisioning Domain (pvd) API
+Notes for IETF mif working group multiple Provisioning Domain (PVD) API.
