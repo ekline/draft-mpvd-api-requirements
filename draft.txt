@@ -4,8 +4,8 @@
 
 Internet Engineering Task Force                            E. Kline, Ed.
 Internet-Draft                                           Google Japan KK
-Intended status: Informational                             June 13, 2015
-Expires: December 15, 2015
+Intended status: Informational                                 June 2015
+Expires: December 3, 2015
 
 
              Multiple Provisioning Domains Application API
@@ -31,7 +31,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on December 15, 2015.
+   This Internet-Draft will expire on December 3, 2015.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Kline                   Expires December 15, 2015               [Page 1]
+Kline                   Expires December 3, 2015                [Page 1]
 
 Internet-Draft            MPVD Application API                 June 2015
 
@@ -63,24 +63,24 @@ Table of Contents
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
      1.1.  Requirements Language . . . . . . . . . . . . . . . . . .   2
    2.  Simple List . . . . . . . . . . . . . . . . . . . . . . . . .   2
-   3.  Figures . . . . . . . . . . . . . . . . . . . . . . . . . . .   2
+   3.  Figures . . . . . . . . . . . . . . . . . . . . . . . . . . .   3
    4.  Subsections and Tables  . . . . . . . . . . . . . . . . . . .   3
      4.1.  A Subsection  . . . . . . . . . . . . . . . . . . . . . .   3
      4.2.  Tables  . . . . . . . . . . . . . . . . . . . . . . . . .   3
-   5.  More about Lists  . . . . . . . . . . . . . . . . . . . . . .   3
+   5.  More about Lists  . . . . . . . . . . . . . . . . . . . . . .   4
      5.1.  Numbering Lists across Lists and Sections . . . . . . . .   4
      5.2.  Where the List Numbering Continues  . . . . . . . . . . .   5
    6.  Example of Code or MIB Module To Be Extracted . . . . . . . .   5
    7.  New API Definitions . . . . . . . . . . . . . . . . . . . . .   6
    8.  Extensions for Existing Sockets API Functions . . . . . . . .   6
    9.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .   6
-   10. IANA Considerations . . . . . . . . . . . . . . . . . . . . .   6
-   11. Security Considerations . . . . . . . . . . . . . . . . . . .   6
-   12. References  . . . . . . . . . . . . . . . . . . . . . . . . .   6
+   10. IANA Considerations . . . . . . . . . . . . . . . . . . . . .   7
+   11. Security Considerations . . . . . . . . . . . . . . . . . . .   7
+   12. References  . . . . . . . . . . . . . . . . . . . . . . . . .   7
      12.1.  Normative References . . . . . . . . . . . . . . . . . .   7
      12.2.  Informative References . . . . . . . . . . . . . . . . .   7
-   Appendix A.  Additional Stuff . . . . . . . . . . . . . . . . . .   7
-   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   7
+   Appendix A.  Additional Stuff . . . . . . . . . . . . . . . . . .   8
+   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   8
 
 1.  Introduction
 
@@ -104,24 +104,26 @@ Table of Contents
 
    You can write text here as well.
 
-3.  Figures
 
 
 
 
-Kline                   Expires December 15, 2015               [Page 2]
+
+Kline                   Expires December 3, 2015                [Page 2]
 
 Internet-Draft            MPVD Application API                 June 2015
 
+
+3.  Figures
 
    Figures should not exceed 69 characters wide to allow for the indent
    of sections.
 
                  Preamble text - can be omitted or empty.
 
-                         +-----------------------+
-                         | Use XML, be Happy :-) |
-                         |_______________________|
+   +-----------------------+
+   | Use XML, be Happy :-) |
+   |_______________________|
 
         Cross-references allowed in pre- and postamble. [min_ref].
 
@@ -159,16 +161,16 @@ Internet-Draft            MPVD Application API                 June 2015
 
                        Table 1: A Very Simple Table
 
-5.  More about Lists
 
 
 
 
-
-Kline                   Expires December 15, 2015               [Page 3]
+Kline                   Expires December 3, 2015                [Page 3]
 
 Internet-Draft            MPVD Application API                 June 2015
 
+
+5.  More about Lists
 
    Lists with 'hanging labels': the list item is indented the amount of
    the hangIndent:
@@ -219,9 +221,7 @@ Internet-Draft            MPVD Application API                 June 2015
 
 
 
-
-
-Kline                   Expires December 15, 2015               [Page 4]
+Kline                   Expires December 3, 2015                [Page 4]
 
 Internet-Draft            MPVD Application API                 June 2015
 
@@ -244,6 +244,44 @@ Internet-Draft            MPVD Application API                 June 2015
 
 6.  Example of Code or MIB Module To Be Extracted
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Kline                   Expires December 3, 2015                [Page 5]
+
+Internet-Draft            MPVD Application API                 June 2015
+
+
    The <artwork> element has a number of extra attributes that can be
    used to substitute a more aesthetically pleasing rendition into HTML
    output while continuing to use the ASCII art version in the text and
@@ -256,30 +294,6 @@ Internet-Draft            MPVD Application API                 June 2015
    ABNF will also be colorized in HTML output to highlight the syntactic
    components.  Checking of additional "types" may be provided in future
    versions of xml2rfc.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Kline                   Expires December 15, 2015               [Page 5]
-
-Internet-Draft            MPVD Application API                 June 2015
 
 
    /**** an example C program */
@@ -312,6 +326,18 @@ Internet-Draft            MPVD Application API                 June 2015
    multi-networking effort by Lorenzo Colitti, Robert Greenwalt, Paul
    Jensen, and Sreeram Ramachandran.
 
+
+
+
+
+
+
+
+Kline                   Expires December 3, 2015                [Page 6]
+
+Internet-Draft            MPVD Application API                 June 2015
+
+
 10.  IANA Considerations
 
    This memo includes no request to IANA.
@@ -329,14 +355,6 @@ Internet-Draft            MPVD Application API                 June 2015
    See RFC 3552 [RFC3552] for a guide.
 
 12.  References
-
-
-
-
-Kline                   Expires December 15, 2015               [Page 6]
-
-Internet-Draft            MPVD Application API                 June 2015
-
 
 12.1.  Normative References
 
@@ -364,6 +382,18 @@ Internet-Draft            MPVD Application API                 June 2015
               Text on Security Considerations", BCP 72, RFC 3552, July
               2003.
 
+
+
+
+
+
+
+
+Kline                   Expires December 3, 2015                [Page 7]
+
+Internet-Draft            MPVD Application API                 June 2015
+
+
 Appendix A.  Additional Stuff
 
    This becomes an Appendix.
@@ -389,4 +419,30 @@ Author's Address
 
 
 
-Kline                   Expires December 15, 2015               [Page 7]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Kline                   Expires December 3, 2015                [Page 8]
