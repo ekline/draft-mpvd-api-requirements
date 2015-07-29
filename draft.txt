@@ -5,11 +5,11 @@
 Internet Engineering Task Force                            E. Kline, Ed.
 Internet-Draft                                           Google Japan KK
 Intended status: Informational                                 June 2015
-Expires: December 3, 2015
+Expires: December 03, 2015
 
 
              Multiple Provisioning Domains Application API
-                 draft-kline-mif-pvd-application-api-01
+                 draft-kline-mif-pvd-application-api-00
 
 Abstract
 
@@ -31,7 +31,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on December 3, 2015.
+   This Internet-Draft will expire on December 03, 2015.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Kline                   Expires December 3, 2015                [Page 1]
+Kline                   Expires December 03, 2015               [Page 1]
 
 Internet-Draft            MPVD Application API                 June 2015
 
@@ -62,30 +62,31 @@ Table of Contents
 
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
      1.1.  Requirements Language . . . . . . . . . . . . . . . . . .   2
-   2.  Simple List . . . . . . . . . . . . . . . . . . . . . . . . .   2
-   3.  Figures . . . . . . . . . . . . . . . . . . . . . . . . . . .   3
-   4.  Subsections and Tables  . . . . . . . . . . . . . . . . . . .   3
-     4.1.  A Subsection  . . . . . . . . . . . . . . . . . . . . . .   3
-     4.2.  Tables  . . . . . . . . . . . . . . . . . . . . . . . . .   3
-   5.  More about Lists  . . . . . . . . . . . . . . . . . . . . . .   4
-     5.1.  Numbering Lists across Lists and Sections . . . . . . . .   4
-     5.2.  Where the List Numbering Continues  . . . . . . . . . . .   5
-   6.  Example of Code or MIB Module To Be Extracted . . . . . . . .   5
-   7.  New API Definitions . . . . . . . . . . . . . . . . . . . . .   6
-   8.  Extensions for Existing Sockets API Functions . . . . . . . .   6
-   9.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .   6
-   10. IANA Considerations . . . . . . . . . . . . . . . . . . . . .   7
-   11. Security Considerations . . . . . . . . . . . . . . . . . . .   7
-   12. References  . . . . . . . . . . . . . . . . . . . . . . . . .   7
-     12.1.  Normative References . . . . . . . . . . . . . . . . . .   7
-     12.2.  Informative References . . . . . . . . . . . . . . . . .   7
-   Appendix A.  Additional Stuff . . . . . . . . . . . . . . . . . .   8
-   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   8
+   2.  TBD . . . . . . . . . . . . . . . . . . . . . . . . . . . . .   2
+   3.  Host Operating System Requirements  . . . . . . . . . . . . .   2
+   4.  New functionality . . . . . . . . . . . . . . . . . . . . . .   2
+   5.  Updates to current functionality  . . . . . . . . . . . . . .   2
+   6.  Simple List . . . . . . . . . . . . . . . . . . . . . . . . .   3
+   7.  Figures . . . . . . . . . . . . . . . . . . . . . . . . . . .   3
+   8.  Subsections and Tables  . . . . . . . . . . . . . . . . . . .   3
+     8.1.  A Subsection  . . . . . . . . . . . . . . . . . . . . . .   3
+     8.2.  Tables  . . . . . . . . . . . . . . . . . . . . . . . . .   3
+   9.  More about Lists  . . . . . . . . . . . . . . . . . . . . . .   4
+     9.1.  Numbering Lists across Lists and Sections . . . . . . . .   4
+     9.2.  Where the List Numbering Continues  . . . . . . . . . . .   5
+   10. Example of Code or MIB Module To Be Extracted . . . . . . . .   5
+   11. New API Definitions . . . . . . . . . . . . . . . . . . . . .   6
+   12. Extensions for Existing Sockets API Functions . . . . . . . .   6
+   13. Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .   6
+   14. IANA Considerations . . . . . . . . . . . . . . . . . . . . .   6
+   15. Security Considerations . . . . . . . . . . . . . . . . . . .   6
+   16. References  . . . . . . . . . . . . . . . . . . . . . . . . .   6
+     16.1.  Normative References . . . . . . . . . . . . . . . . . .   7
+     16.2.  Informative References . . . . . . . . . . . . . . . . .   7
+   Appendix A.  Comparison with Android implementation . . . . . . .   7
+   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   7
 
 1.  Introduction
-
-   The original specification of xml2rfc format is in RFC 2629
-   [RFC2629].
 
 1.1.  Requirements Language
 
@@ -93,7 +94,32 @@ Table of Contents
    "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
    document are to be interpreted as described in RFC 2119 [RFC2119].
 
-2.  Simple List
+2.  TBD
+
+3.  Host Operating System Requirements
+
+   In order to support the application's use of multiple PVDs, several
+   requirements must be fulfilled by the part of the host operating
+   system authorized to perform the required functions.
+
+4.  New functionality
+
+5.  Updates to current functionality
+
+
+
+
+Kline                   Expires December 03, 2015               [Page 2]
+
+Internet-Draft            MPVD Application API                 June 2015
+
+
+   In order to ease porting of non-PVD-aware applications as well as
+   support non-PVD-aware applications in accordance with the principal
+   of least surprise it is recommended that the following functionality
+   be added to existing system networking APIs.
+
+6.  Simple List
 
    List styles: 'empty', 'symbols', 'letters', 'numbers', 'hanging',
    'format'.
@@ -104,26 +130,16 @@ Table of Contents
 
    You can write text here as well.
 
-
-
-
-
-
-Kline                   Expires December 3, 2015                [Page 2]
-
-Internet-Draft            MPVD Application API                 June 2015
-
-
-3.  Figures
+7.  Figures
 
    Figures should not exceed 69 characters wide to allow for the indent
    of sections.
 
                  Preamble text - can be omitted or empty.
 
-   +-----------------------+
-   | Use XML, be Happy :-) |
-   |_______________________|
+                         +-----------------------+
+                         | Use XML, be Happy :-) |
+                         |_______________________|
 
         Cross-references allowed in pre- and postamble. [min_ref].
 
@@ -135,16 +151,24 @@ Internet-Draft            MPVD Application API                 June 2015
    anchor.  White space, both horizontal and vertical, is significant in
    figures even if you don't use CDATA.
 
-4.  Subsections and Tables
+8.  Subsections and Tables
 
-4.1.  A Subsection
+8.1.  A Subsection
 
    By default 3 levels of nesting show in table of contents but that can
    be adjusted with the value of the "tocdepth" processing instruction.
 
-4.2.  Tables
+8.2.  Tables
 
    .. are very similar to figures:
+
+
+
+
+Kline                   Expires December 03, 2015               [Page 3]
+
+Internet-Draft            MPVD Application API                 June 2015
+
 
      Tables use ttcol to define column headers and widths.  Every cell
                   then has a "c" element for its content.
@@ -161,16 +185,7 @@ Internet-Draft            MPVD Application API                 June 2015
 
                        Table 1: A Very Simple Table
 
-
-
-
-
-Kline                   Expires December 3, 2015                [Page 3]
-
-Internet-Draft            MPVD Application API                 June 2015
-
-
-5.  More about Lists
+9.  More about Lists
 
    Lists with 'hanging labels': the list item is indented the amount of
    the hangIndent:
@@ -195,13 +210,21 @@ Internet-Draft            MPVD Application API                 June 2015
       The quick, brown fox jumped over the lazy dog and lived to fool
       many another hunter in the great wood in the west.
 
-5.1.  Numbering Lists across Lists and Sections
+9.1.  Numbering Lists across Lists and Sections
 
    Numbering items continuously although they are in separate <list>
    elements, maybe in separate sections using the "format" style and a
    "counter" variable.
 
    First list:
+
+
+
+
+Kline                   Expires December 03, 2015               [Page 4]
+
+Internet-Draft            MPVD Application API                 June 2015
+
 
    R1  #1
 
@@ -219,14 +242,7 @@ Internet-Draft            MPVD Application API                 June 2015
 
    R6  #6
 
-
-
-Kline                   Expires December 3, 2015                [Page 4]
-
-Internet-Draft            MPVD Application API                 June 2015
-
-
-5.2.  Where the List Numbering Continues
+9.2.  Where the List Numbering Continues
 
    List continues here.
 
@@ -242,45 +258,7 @@ Internet-Draft            MPVD Application API                 June 2015
 
    The end of the list.
 
-6.  Example of Code or MIB Module To Be Extracted
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Kline                   Expires December 3, 2015                [Page 5]
-
-Internet-Draft            MPVD Application API                 June 2015
-
+10.  Example of Code or MIB Module To Be Extracted
 
    The <artwork> element has a number of extra attributes that can be
    used to substitute a more aesthetically pleasing rendition into HTML
@@ -294,6 +272,14 @@ Internet-Draft            MPVD Application API                 June 2015
    ABNF will also be colorized in HTML output to highlight the syntactic
    components.  Checking of additional "types" may be provided in future
    versions of xml2rfc.
+
+
+
+
+
+Kline                   Expires December 03, 2015               [Page 5]
+
+Internet-Draft            MPVD Application API                 June 2015
 
 
    /**** an example C program */
@@ -316,29 +302,17 @@ Internet-Draft            MPVD Application API                 June 2015
    /* end of file */
 
 
-7.  New API Definitions
+11.  New API Definitions
 
-8.  Extensions for Existing Sockets API Functions
+12.  Extensions for Existing Sockets API Functions
 
-9.  Acknowledgements
+13.  Acknowledgements
 
    The core concepts for this approach were developed for the Android
-   multi-networking effort by Lorenzo Colitti, Robert Greenwalt, Paul
+   multinetworking effort by Lorenzo Colitti, Robert Greenwalt, Paul
    Jensen, and Sreeram Ramachandran.
 
-
-
-
-
-
-
-
-Kline                   Expires December 3, 2015                [Page 6]
-
-Internet-Draft            MPVD Application API                 June 2015
-
-
-10.  IANA Considerations
+14.  IANA Considerations
 
    This memo includes no request to IANA.
 
@@ -349,21 +323,29 @@ Internet-Draft            MPVD Application API                 June 2015
    above).  If there are no requirements for IANA, the section will be
    removed during conversion into an RFC by the RFC Editor.
 
-11.  Security Considerations
+15.  Security Considerations
 
    All drafts are required to have a security considerations section.
    See RFC 3552 [RFC3552] for a guide.
 
-12.  References
+16.  References
 
-12.1.  Normative References
+
+
+
+Kline                   Expires December 03, 2015               [Page 6]
+
+Internet-Draft            MPVD Application API                 June 2015
+
+
+16.1.  Normative References
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119, March 1997.
 
    [min_ref]  authSurName, authInitials., "Minimal Reference", 2006.
 
-12.2.  Informative References
+16.2.  Informative References
 
    [DOMINATION]
               Mad Dominators, Inc., "Ultimate Plan for Taking Over the
@@ -382,19 +364,7 @@ Internet-Draft            MPVD Application API                 June 2015
               Text on Security Considerations", BCP 72, RFC 3552, July
               2003.
 
-
-
-
-
-
-
-
-Kline                   Expires December 3, 2015                [Page 7]
-
-Internet-Draft            MPVD Application API                 June 2015
-
-
-Appendix A.  Additional Stuff
+Appendix A.  Comparison with Android implementation
 
    This becomes an Appendix.
 
@@ -419,30 +389,4 @@ Author's Address
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Kline                   Expires December 3, 2015                [Page 8]
+Kline                   Expires December 03, 2015               [Page 7]
