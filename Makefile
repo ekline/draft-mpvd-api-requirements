@@ -8,7 +8,7 @@ text:	$(SRCXML)
 
 # Pull and update this repository.
 update:
-	git pull -v -u origin master
+	git checkout master && git remote update && git rebase
 
 push:
 	git push -v origin master:master

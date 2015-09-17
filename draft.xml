@@ -125,6 +125,15 @@ what to do with process and thread default values on fork/exec
 
 http://tools.ietf.org/html/rfc1122 section 3.3.4.2:  Strong/Weak ES model
 
+RFC7556 section 5:
+5.1 Name Resolution
+
+A PVD-aware API MUST make it possible for an application to peform
+normal name resolution constrained to the name resolution configuration
+within a specified PVD.
+
+Ex: extended getaddrinfo with support for a pvd_handle_t argument.
+
 ### Presentation notes
 
 ## 1
