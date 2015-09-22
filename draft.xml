@@ -47,7 +47,7 @@
      they will automatically be output with "(if approved)" -->
 
   <front>
-    <title abbrev="MPVD Application API">Multiple Provisioning Domains Application API</title>
+    <title abbrev="MPVD Application API">Multiple Provisioning Domains Application API Requirements</title>
 
     <author fullname="Erik Kline"
             initials="E." surname="Kline"
@@ -67,7 +67,7 @@
       </address>
     </author>
 
-    <date month="June" year="2015" />
+    <date/>
 
     <!-- Meta-data Declarations -->
 
@@ -136,22 +136,6 @@ Ex: extended getaddrinfo with support for a pvd_handle_t argument.
 
 ### Presentation notes
 
-## 1
-PvD
-
-. RFC7556 section 2
-    . "A consistent set of network configuration information..."
-- includes:
-    - participating interfaces
-    - addresses
-    - routes
-    - default routes, of course
-    - but also RIO -type information
-    - DNS servers and search path
-    - HTTP proxy
-    - yet to be specified: metering, medium, captive portal URL, ...
-- not learned atomically
-- not static
 
 ## 2
 what things do apps need?
@@ -275,6 +259,25 @@ DNS resolution
 -->
     <section title="Introduction">
       <t>
+RFC 7556 provides all the essential guidance an API designer would need
+to support use of PvDs.
+
+This document aims to make some of the implications more concrete by
+discussion and example.
+      </t>
+      <t>
+All system functionality that has historically been performed in the context of a single, implicit PvD must be updated to support the same operations on an explicitly requested PvD.
+      </t>
+      <t>
+For backward compatibility for non-PvD-aware applications, there must exist a "default PvD", i.e. a PvD within which system functions requiring a PvD are to be performed.
+      </t>
+      <t>
+Such a PvD MAY be a "null" or "empty" PvD: one in which no addresses or routes of any address family are configured and devoid of configuration information of any kind.  A system for which
+he default PvD was such a "null" PvD would effectively require all applications to be fully PvD-aware in order to function.
+      </t>
+      <t>
+It is expected that most nodes will use a variety of information and administrative policy to promote one of a number of currently active PvDs to be the default for ease of backward compatibility, and to
+promote another active PvD in its place as circumstances change.
       </t>
 
       <section title="Requirements Language">
@@ -285,7 +288,55 @@ DNS resolution
       </section>
     </section>
 
+<!--
+Explicit versus Implicit PvDs
+- the API used by PvD-aware applications MUST support both implicit and explicit PvDs
+- It SHOULD NOT be necessary for a PvD-aware application to distinguish between explicit and implicit PvDs.  Both SHOULD be equally accessible and useful via the same API calls.
+- PvD-aware nodes should provide PvD identifiers for implicit PvDs that can be used with out application change in the same ways as explicit PvDs
+
+
+
+ -->
+
     <section anchor="tbd" title="TBD">
+      <t>
+Three major categories for PvD API requirements:
+- selection of configuration information
+- selection of source addresses
+- selection of routing information
+      </t>
+      <t>
+## 1
+PvD
+
+. RFC7556 section 2
+    . "A consistent set of network configuration information..."
+
+- includes:
+    - participating interfaces
+    - addresses
+    - routes (default routes and more specifics)
+    - but also RIO -type information
+    - DNS servers and search path
+    - HTTP proxy
+    - yet to be specified: metering, medium, captive portal URL, ...
+- not learned atomically
+- not static
+      </t>
+      <t>
+High-level API requirements are:
+- everything done today with an implicit pvd assumed must be doable with an explicit pvd
+- it must be possible to learn of pvds coming and going
+- it should be possible to learn pvd configuration information and updates
+      </t>
+      <t>
+The rest of this document is concerned with:
+- identifying new system requirements
+- identifying some existing uses of implicit pvds that will need to be updated to support explicit pvds
+      </t>
+    </section>
+
+    <section anchor="tbd2" title="TBD2">
       <t>
       </t>
     </section>
