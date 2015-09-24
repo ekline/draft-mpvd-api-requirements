@@ -4,8 +4,8 @@
 
 Internet Engineering Task Force                            E. Kline, Ed.
 Internet-Draft                                           Google Japan KK
-Intended status: Informational                        September 23, 2015
-Expires: March 26, 2016
+Intended status: Informational                        September 26, 2015
+Expires: March 29, 2016
 
 
        Multiple Provisioning Domains Application API Requirements
@@ -31,7 +31,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on March 26, 2016.
+   This Internet-Draft will expire on March 29, 2016.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Kline                    Expires March 26, 2016                 [Page 1]
+Kline                    Expires March 29, 2016                 [Page 1]
 
 Internet-Draft            MPVD Application API            September 2015
 
@@ -62,30 +62,23 @@ Table of Contents
 
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
      1.1.  Requirements Language . . . . . . . . . . . . . . . . . .   3
-   2.  TBD . . . . . . . . . . . . . . . . . . . . . . . . . . . . .   3
-   3.  TBD2  . . . . . . . . . . . . . . . . . . . . . . . . . . . .   3
-   4.  Host Operating System Requirements  . . . . . . . . . . . . .   3
-   5.  New functionality . . . . . . . . . . . . . . . . . . . . . .   3
-   6.  Updates to current functionality  . . . . . . . . . . . . . .   4
-   7.  Simple List . . . . . . . . . . . . . . . . . . . . . . . . .   4
-   8.  Figures . . . . . . . . . . . . . . . . . . . . . . . . . . .   4
-   9.  Subsections and Tables  . . . . . . . . . . . . . . . . . . .   4
-     9.1.  A Subsection  . . . . . . . . . . . . . . . . . . . . . .   4
-     9.2.  Tables  . . . . . . . . . . . . . . . . . . . . . . . . .   4
-   10. More about Lists  . . . . . . . . . . . . . . . . . . . . . .   5
-     10.1.  Numbering Lists across Lists and Sections  . . . . . . .   5
-     10.2.  Where the List Numbering Continues . . . . . . . . . . .   6
-   11. Example of Code or MIB Module To Be Extracted . . . . . . . .   6
-   12. New API Definitions . . . . . . . . . . . . . . . . . . . . .   7
-   13. Extensions for Existing Sockets API Functions . . . . . . . .   7
-   14. Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .   7
-   15. IANA Considerations . . . . . . . . . . . . . . . . . . . . .   7
-   16. Security Considerations . . . . . . . . . . . . . . . . . . .   7
-   17. References  . . . . . . . . . . . . . . . . . . . . . . . . .   7
-     17.1.  Normative References . . . . . . . . . . . . . . . . . .   8
-     17.2.  Informative References . . . . . . . . . . . . . . . . .   8
-   Appendix A.  Comparison with Android implementation . . . . . . .   8
-   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   8
+   2.  Discussion  . . . . . . . . . . . . . . . . . . . . . . . . .   3
+   3.  Requirements for new API functionality  . . . . . . . . . . .   3
+   4.  Requirements for updates to existing API functionality  . . .   3
+   5.  a . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .   4
+   6.  b . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .   4
+   7.  Host Operating System Requirements  . . . . . . . . . . . . .   4
+   8.  c . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .   4
+   9.  New API Definitions . . . . . . . . . . . . . . . . . . . . .   4
+   10. Extensions for Existing Sockets API Functions . . . . . . . .   4
+   11. Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .   4
+   12. IANA Considerations . . . . . . . . . . . . . . . . . . . . .   4
+   13. Security Considerations . . . . . . . . . . . . . . . . . . .   4
+   14. References  . . . . . . . . . . . . . . . . . . . . . . . . .   4
+     14.1.  Normative References . . . . . . . . . . . . . . . . . .   4
+     14.2.  Informative References . . . . . . . . . . . . . . . . .   5
+   Appendix A.  Comparison with Android implementation . . . . . . .   5
+   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   5
 
 1.  Introduction
 
@@ -97,7 +90,7 @@ Table of Contents
    context of a single, implicit PvD must be updated to support the same
    operations on an explicitly requested PvD.
 
-   For backward compatibility for non-PvD-aware applications, there must
+   For backward compatibility for non-PvD-aware applications, there MUST
    exist a "default PvD", i.e. a PvD within which system functions
    requiring a PvD are to be performed.
 
@@ -107,17 +100,19 @@ Table of Contents
    PvD was such a "null" PvD would effectively require all applications
    to be fully PvD-aware in order to function.
 
-
-
-Kline                    Expires March 26, 2016                 [Page 2]
-
-Internet-Draft            MPVD Application API            September 2015
-
-
    It is expected that most nodes will use a variety of information and
    administrative policy to promote one of a number of currently active
    PvDs to be the default for ease of backward compatibility, and to
    promote another active PvD in its place as circumstances change.
+
+
+
+
+
+Kline                    Expires March 29, 2016                 [Page 2]
+
+Internet-Draft            MPVD Application API            September 2015
+
 
 1.1.  Requirements Language
 
@@ -125,11 +120,59 @@ Internet-Draft            MPVD Application API            September 2015
    "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
    document are to be interpreted as described in RFC 2119 [RFC2119].
 
-2.  TBD
+2.  Discussion
 
-   Three major categories for PvD API requirements: - selection of
-   configuration information - selection of source addresses - selection
-   of routing information
+   Two major categories of PvD application API requirements: - learning
+   about PvDs - existence and changes in availability - configuration
+   data contained within a PvD ID and changes of configuration
+   information - selection of a PvD to scope various operations: -
+   selection of configuration information - selection of source
+   addresses - selection of routing information
+
+   High-level API requirements are: - it must be possible to learn of
+   pvds coming and going - it should be possible to learn pvd
+   configuration information and updates - everything done today with an
+   implicit pvd assumed must be doable with an explicit pvd
+
+   The rest of this document is concerned with: - identifying new system
+   requirements - identifying some existing uses of implicit pvds that
+   will need to be updated to support explicit pvds
+
+3.  Requirements for new API functionality
+
+   o  get currently available PvDs
+
+   o  get current default PvD, if system supports concept of default
+
+   o  get notified of changes to the set of available PvDs: new, change
+      in default
+
+   o  set default PvD per process and per thread
+
+   o  all config info, learn mapping between interfaces and PvD IDs/
+      handles, must be extensible
+
+   o  ...
+
+4.  Requirements for updates to existing API functionality
+
+   In order to ease porting of non-PVD-aware applications as well as
+   support non-PVD-aware applications in accordance with the principal
+   of least surprise it is recommended that the following functionality
+   be added to existing system networking APIs.
+
+
+
+
+
+Kline                    Expires March 29, 2016                 [Page 3]
+
+Internet-Draft            MPVD Application API            September 2015
+
+
+5.  a
+
+6.  b
 
    ## 1 PvD . RFC7556 section 2 . "A consistent set of network
    configuration information..." - includes: - participating interfaces
@@ -138,270 +181,52 @@ Internet-Draft            MPVD Application API            September 2015
    yet to be specified: metering, medium, captive portal URL, ...  - not
    learned atomically - not static
 
-   High-level API requirements are: - everything done today with an
-   implicit pvd assumed must be doable with an explicit pvd - it must be
-   possible to learn of pvds coming and going - it should be possible to
-   learn pvd configuration information and updates
-
-   The rest of this document is concerned with: - identifying new system
-   requirements - identifying some existing uses of implicit pvds that
-   will need to be updated to support explicit pvds
-
-3.  TBD2
-
-4.  Host Operating System Requirements
+7.  Host Operating System Requirements
 
    In order to support the application's use of multiple PVDs, several
    requirements must be fulfilled by the part of the host operating
    system authorized to perform the required functions.
 
-5.  New functionality
+8.  c
 
+9.  New API Definitions
 
+10.  Extensions for Existing Sockets API Functions
 
-
-
-
-
-
-
-Kline                    Expires March 26, 2016                 [Page 3]
-
-Internet-Draft            MPVD Application API            September 2015
-
-
-6.  Updates to current functionality
-
-   In order to ease porting of non-PVD-aware applications as well as
-   support non-PVD-aware applications in accordance with the principal
-   of least surprise it is recommended that the following functionality
-   be added to existing system networking APIs.
-
-7.  Simple List
-
-   List styles: 'empty', 'symbols', 'letters', 'numbers', 'hanging',
-   'format'.
-
-   o  First bullet
-
-   o  Second bullet
-
-   You can write text here as well.
-
-8.  Figures
-
-   Figures should not exceed 69 characters wide to allow for the indent
-   of sections.
-
-                 Preamble text - can be omitted or empty.
-
-                         +-----------------------+
-                         | Use XML, be Happy :-) |
-                         |_______________________|
-
-        Cross-references allowed in pre- and postamble. [min_ref].
-
-                                 Figure 1
-
-   The CDATA means you don't need to escape meta-characters (especially
-   < (&lt;) and & (&amp;)) but is not essential.  Figures may also have
-   a title attribute but it won't be displayed unless there is also an
-   anchor.  White space, both horizontal and vertical, is significant in
-   figures even if you don't use CDATA.
-
-9.  Subsections and Tables
-
-9.1.  A Subsection
-
-   By default 3 levels of nesting show in table of contents but that can
-   be adjusted with the value of the "tocdepth" processing instruction.
-
-9.2.  Tables
-
-
-
-
-Kline                    Expires March 26, 2016                 [Page 4]
-
-Internet-Draft            MPVD Application API            September 2015
-
-
-   .. are very similar to figures:
-
-     Tables use ttcol to define column headers and widths.  Every cell
-                  then has a "c" element for its content.
-
-                          +----------+----------+
-                          | ttcol #1 | ttcol #2 |
-                          +----------+----------+
-                          |   c #1   |   c #2   |
-                          |   c #3   |   c #4   |
-                          |   c #5   |   c #6   |
-                          +----------+----------+
-
-                      which is a very simple example.
-
-                       Table 1: A Very Simple Table
-
-10.  More about Lists
-
-   Lists with 'hanging labels': the list item is indented the amount of
-   the hangIndent:
-
-   short   With a label shorter than the hangIndent.
-
-   fantastically long label  With a label longer than the hangIndent.
-
-   vspace_trick
-           Forces the new item to start on a new line.
-
-   Simulating more than one paragraph in a list item using <vspace>:
-
-   a.  First, a short item.
-
-   b.  Second, a longer list item.
-
-       And something that looks like a separate pararaph..
-
-   Simple indented paragraph using the "empty" style:
-
-      The quick, brown fox jumped over the lazy dog and lived to fool
-      many another hunter in the great wood in the west.
-
-10.1.  Numbering Lists across Lists and Sections
-
-   Numbering items continuously although they are in separate <list>
-   elements, maybe in separate sections using the "format" style and a
-   "counter" variable.
-
-
-
-
-Kline                    Expires March 26, 2016                 [Page 5]
-
-Internet-Draft            MPVD Application API            September 2015
-
-
-   First list:
-
-   R1  #1
-
-   R2  #2
-
-   R3  #3
-
-   Specify the indent explicitly so that all the items line up nicely.
-
-   Second list:
-
-   R4  #4
-
-   R5  #5
-
-   R6  #6
-
-10.2.  Where the List Numbering Continues
-
-   List continues here.
-
-   Third list:
-
-   R7  #7
-
-   R8  #8
-
-   R9  #9
-
-   R10 #10
-
-   The end of the list.
-
-11.  Example of Code or MIB Module To Be Extracted
-
-   The <artwork> element has a number of extra attributes that can be
-   used to substitute a more aesthetically pleasing rendition into HTML
-   output while continuing to use the ASCII art version in the text and
-   nroff outputs (see the xml2rfc README for details).  It also has a
-   "type" attribute.  This is currently ignored except in the case
-   'type="abnf"'.  In this case the "artwork" is expected to contain a
-   piece of valid Augmented Backus-Naur Format (ABNF) grammar.  This
-   will be syntax checked by xml2rfc and any errors will cause a fatal
-   error if the "strict" processing instruction is set to "yes".  The
-   ABNF will also be colorized in HTML output to highlight the syntactic
-   components.  Checking of additional "types" may be provided in future
-   versions of xml2rfc.
-
-
-
-Kline                    Expires March 26, 2016                 [Page 6]
-
-Internet-Draft            MPVD Application API            September 2015
-
-
-   /**** an example C program */
-
-   #include <stdio.h>
-
-   void
-   main(int argc, char *argv[])
-   {
-       int i;
-
-       printf("program arguments are:\n");
-       for (i = 0; i < argc; i++) {
-           printf("%d: \"%s\"\n", i, argv[i]);
-       }
-
-       exit(0);
-   } /* main */
-
-   /* end of file */
-
-
-12.  New API Definitions
-
-13.  Extensions for Existing Sockets API Functions
-
-14.  Acknowledgements
+11.  Acknowledgements
 
    The core concepts for this approach were developed for the Android
    multinetworking effort by Lorenzo Colitti, Robert Greenwalt, Paul
    Jensen, and Sreeram Ramachandran.
 
-15.  IANA Considerations
+   Additional thanks to the coffee shops of Tokyo.
+
+12.  IANA Considerations
 
    This memo includes no request to IANA.
 
-   All drafts are required to have an IANA considerations section (see
-   the update of RFC 2434 [I-D.narten-iana-considerations-rfc2434bis]
-   for a guide).  If the draft does not require IANA to do anything, the
-   section contains an explicit statement that this is the case (as
-   above).  If there are no requirements for IANA, the section will be
-   removed during conversion into an RFC by the RFC Editor.
-
-16.  Security Considerations
+13.  Security Considerations
 
    All drafts are required to have a security considerations section.
    See RFC 3552 [RFC3552] for a guide.
 
-17.  References
+14.  References
 
-
-
-
-Kline                    Expires March 26, 2016                 [Page 7]
-
-Internet-Draft            MPVD Application API            September 2015
-
-
-17.1.  Normative References
+14.1.  Normative References
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119, March 1997.
 
    [min_ref]  authSurName, authInitials., "Minimal Reference", 2006.
 
-17.2.  Informative References
+
+
+Kline                    Expires March 29, 2016                 [Page 4]
+
+Internet-Draft            MPVD Application API            September 2015
+
+
+14.2.  Informative References
 
    [DOMINATION]
               Mad Dominators, Inc., "Ultimate Plan for Taking Over the
@@ -445,4 +270,11 @@ Author's Address
 
 
 
-Kline                    Expires March 26, 2016                 [Page 8]
+
+
+
+
+
+
+
+Kline                    Expires March 29, 2016                 [Page 5]

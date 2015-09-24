@@ -269,7 +269,7 @@ discussion and example.
 All system functionality that has historically been performed in the context of a single, implicit PvD must be updated to support the same operations on an explicitly requested PvD.
       </t>
       <t>
-For backward compatibility for non-PvD-aware applications, there must exist a "default PvD", i.e. a PvD within which system functions requiring a PvD are to be performed.
+For backward compatibility for non-PvD-aware applications, there MUST exist a "default PvD", i.e. a PvD within which system functions requiring a PvD are to be performed.
       </t>
       <t>
 Such a PvD MAY be a "null" or "empty" PvD: one in which no addresses or routes of any address family are configured and devoid of configuration information of any kind.  A system for which
@@ -298,13 +298,62 @@ Explicit versus Implicit PvDs
 
  -->
 
-    <section anchor="tbd" title="TBD">
+    <section anchor="discussion" title="Discussion">
       <t>
-Three major categories for PvD API requirements:
-- selection of configuration information
-- selection of source addresses
-- selection of routing information
+Two major categories of PvD application API requirements:
+- learning about PvDs
+    - existence and changes in availability
+    - configuration data contained within a PvD ID and changes of configuration information
+- selection of a PvD to scope various operations:
+    - selection of configuration information
+    - selection of source addresses
+    - selection of routing information
       </t>
+      <t>
+High-level API requirements are:
+- it must be possible to learn of pvds coming and going
+- it should be possible to learn pvd configuration information and updates
+- everything done today with an implicit pvd assumed must be doable with an explicit pvd
+      </t>
+      <t>
+The rest of this document is concerned with:
+- identifying new system requirements
+- identifying some existing uses of implicit pvds that will need to be updated to support explicit pvds
+      </t>
+      <t>
+      </t>
+    </section>
+
+    <section anchor="req_new_api" title="Requirements for new API functionality">
+      <t>
+      </t>
+      <t>
+        <list style="symbols">
+<t>get currently available PvDs</t>
+<t>get current default PvD, if system supports concept of default</t>
+<t>get notified of changes to the set of available PvDs: new, change in default</t>
+<t>set default PvD per process and per thread</t>
+<t>all config info, learn mapping between interfaces and PvD IDs/handles, must be extensible</t>
+<t>...</t>
+        </list>
+      </t>
+    </section>
+
+    <section anchor="reqs_update" title="Requirements for updates to existing API functionality">
+      <t>
+In order to ease porting of non-PVD-aware applications as well as support
+non-PVD-aware applications in accordance with the principal of least surprise
+it is recommended that the following functionality be added to existing
+system networking APIs.
+      </t>
+      <t>
+      </t>
+    </section>
+
+    <section anchor="a" title="a">
+    </section>
+
+    <section anchor="b" title="b">
       <t>
 ## 1
 PvD
@@ -324,20 +373,6 @@ PvD
 - not static
       </t>
       <t>
-High-level API requirements are:
-- everything done today with an implicit pvd assumed must be doable with an explicit pvd
-- it must be possible to learn of pvds coming and going
-- it should be possible to learn pvd configuration information and updates
-      </t>
-      <t>
-The rest of this document is concerned with:
-- identifying new system requirements
-- identifying some existing uses of implicit pvds that will need to be updated to support explicit pvds
-      </t>
-    </section>
-
-    <section anchor="tbd2" title="TBD2">
-      <t>
       </t>
     </section>
 
@@ -349,20 +384,12 @@ authorized to perform the required functions.
       </t>
     </section>
 
-    <section anchor="new_functions" title="New functionality">
+    <section anchor="c" title="c">
       <t>
       </t>
     </section>
 
-    <section anchor="update_current" title="Updates to current functionality">
-      <t>
-In order to ease porting of non-PVD-aware applications as well as support
-non-PVD-aware applications in accordance with the principal of least surprise
-it is recommended that the following functionality be added to existing
-system networking APIs.
-      </t>
-    </section>
-
+<!--
     <section anchor="simple_list" title="Simple List">
       <t>List styles: 'empty', 'symbols', 'letters', 'numbers', 'hanging',
       'format'.</t>
@@ -382,7 +409,7 @@ system networking APIs.
         <preamble>Preamble text - can be omitted or empty.</preamble>
 
         <artwork align="left"><![CDATA[
-+-----------------------+
++_______________________+
 | Use XML, be Happy :-) |
 |_______________________|
             ]]></artwork>
@@ -397,9 +424,11 @@ system networking APIs.
       there is also an anchor. White space, both horizontal and vertical, is
       significant in figures even if you don't use CDATA.</t>
     </section>
+-->
 
     <!-- This PI places the pagebreak correctly (before the section title) in the text output. -->
 
+<!--
     <?rfc needLines="8" ?>
 
     <section title="Subsections and Tables">
@@ -436,7 +465,9 @@ system networking APIs.
         </texttable>
       </section>
     </section>
+-->
 
+<!--
     <section anchor="nested_lists" title="More about Lists">
       <t>Lists with 'hanging labels': the list item is indented the amount of
       the hangIndent: <list hangIndent="8" style="hanging">
@@ -449,9 +480,7 @@ system networking APIs.
           item to start on a new line.</t>
         </list></t>
 
-      <!-- It would be nice to see the next piece (12 lines) all on one page. -->
-
-      <?rfc needLines="12" ?>
+      <?rfc needLines="12" ?>  // get the next 12 lines all on one page
 
       <t>Simulating more than one paragraph in a list item using
       &lt;vspace&gt;: <list style="letters">
@@ -504,7 +533,9 @@ system networking APIs.
           </list> The end of the list.</t>
       </section>
     </section>
+-->
 
+<!--
     <section anchor="codeExample"
              title="Example of Code or MIB Module To Be Extracted">
       <figure>
@@ -545,8 +576,11 @@ main(int argc, char *argv[])
             ]]></artwork>
       </figure>
     </section>
+-->
 
     <section anchor="new_api_definitions" title="New API Definitions">
+      <t>
+      </t>
       <t>
 <!--
 
@@ -599,7 +633,6 @@ pvd_handle_t pvd_process_default();
 // of a call to pvd_current_process_default().
 pvd_handle_t pvd_thread_default();
 
-int pvd_set_system_default(pvd_handle_t);  // 0 or -1 && errno = EFOO
 int pvd_set_process_default(pvd_handle_t);  // 0 or -1 && errno = EFOO
 int pvd_set_thread_default(pvd_handle_t);  // 0 or -1 && errno = EFOO
 
@@ -619,7 +652,6 @@ int pvd_set_thread_default(pvd_handle_t);  // 0 or -1 && errno = EFOO
 //     return result;
 // }
 
-#if 0
 Things thare are missing include:
 
     - should there be a PVD index defined for "node-local"?
@@ -631,19 +663,6 @@ Things thare are missing include:
       is comprised of a mobile link versus wifi/ethernet, whether there
       is some metering/charging associated with traffic sent/received via
       this PVD or not, etc.
-
-
-    - method to get a list of all current PVDs.
-
-
-    - method to map pvd_handle_t's to if_index.
-
-// C.f. if_nameindex()
-struct pvd_if_indices {
-  pvd_handle_t pvd_index;
-  unsigned int if_index;
-};
-
   -->
       </t>
       <t>
@@ -731,19 +750,15 @@ The core concepts for this approach were developed for the Android
 multinetworking effort by Lorenzo Colitti, Robert Greenwalt, Paul Jensen,
 and Sreeram Ramachandran.
       </t>
+      <t>
+Additional thanks to the coffee shops of Tokyo.
+      </t>
     </section>
 
     <!-- Possibly a 'Contributors' section ... -->
 
     <section anchor="IANA" title="IANA Considerations">
       <t>This memo includes no request to IANA.</t>
-
-      <t>All drafts are required to have an IANA considerations section (see
-      <xref target="I-D.narten-iana-considerations-rfc2434bis">the update of
-      RFC 2434</xref> for a guide). If the draft does not require IANA to do
-      anything, the section contains an explicit statement that this is the
-      case (as above). If there are no requirements for IANA, the section will
-      be removed during conversion into an RFC by the RFC Editor.</t>
     </section>
 
     <section anchor="Security" title="Security Considerations">
