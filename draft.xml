@@ -298,6 +298,40 @@ Explicit versus Implicit PvDs
 
     <section anchor="tl_dr" title="TL;DR">
       <t>
+<list counter="reqs" hangIndent="4" style="format R%d">
+<t>
+An API call MUST exist whereby an application can learn the identifiers, or short handles, of all PvDs active on the system at the time.
+</t>
+<t>
+An mPvD API implementation MUST include a mechanism whereby an application can learn of/be notified of: the arrival of new PvDs or the anticipated removal of a PvD.
+Actual removal of a PvD can be learned by observing any blocking PvD API operation for errors indicating the loss of the PvD (e.g. a socket read() returning ENONET).
+</t>
+<t>
+API implementations that use short handles to reference PvD information (identifiers, configuration information) SHOULD consider varying the handle used for
+a specific PvD with each separate attach, e.g. a 3GPP connection to "apn.carrier.example" might have handle 100 for the first attach after boot,
+and 101 for the next attach after going into and coming out of "airplane mode".  Because there is no guarantee that the configuration information, like delegated
+prefixes and configured IP addresses, will be the same with every successful attachment to the same PvD, changing the handle accordingly can help
+to disabuse application writers of erroneous notions of caching PvD configuration information from one attachment instance to another.
+</t>
+<t>
+There MUST be an API call which, when passed a PvD identifier or short handle, returns elements of configuration information specific to that PvD.
+</t>
+<t>
+This API MUST be extenible, as PvD information is not guaranteed to be learned atomically nor is it guaranteed to be static. Furthermore, this API needs to
+be extensible in order to accomodate requesting new configuration information not yet conceived of at this time, e.g. a new FOO protocol is used within a given PvD and
+it's important for applications to learn that they need to use the proxy BAR for best performance.
+</t>
+<t>
+An mPvD API implementation MUST include a mechanism whereby an application can learn of changes to the configuration information of a given PvD, e.g. a new temporary
+address has been formed, a new secondary DNS server has replaced the previous secondary, et cetera.
+</t>
+<t>
+For every element of system functionality that has historically been performed in the context of a single, implicit PvD an API extension MUST exist allowing the application to specificy that the same functionality be
+performed within the scope of an explicitly requested PvD (via identifier or handle).
+</t>
+<t>
+</t>
+</list>
       </t>
       <section anchor="reqs" title="Requirements for a mPvD API implementation">
       </section>
