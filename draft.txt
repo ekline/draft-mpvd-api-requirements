@@ -4,8 +4,8 @@
 
 Internet Engineering Task Force                            E. Kline, Ed.
 Internet-Draft                                           Google Japan KK
-Intended status: Informational                        September 29, 2015
-Expires: April 01, 2016
+Intended status: Informational                          October 04, 2015
+Expires: April 06, 2016
 
 
        Multiple Provisioning Domains Application API Requirements
@@ -31,7 +31,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on April 01, 2016.
+   This Internet-Draft will expire on April 06, 2016.
 
 Copyright Notice
 
@@ -53,35 +53,43 @@ Copyright Notice
 
 
 
-Kline                    Expires April 01, 2016                 [Page 1]
+Kline                    Expires April 06, 2016                 [Page 1]
 
-Internet-Draft            MPVD Application API            September 2015
+Internet-Draft            MPVD Application API              October 2015
 
 
 Table of Contents
 
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
      1.1.  Requirements Language . . . . . . . . . . . . . . . . . .   3
-   2.  TL;DR . . . . . . . . . . . . . . . . . . . . . . . . . . . .   3
-     2.1.  Requirements for a mPvD API implementation  . . . . . . .   4
-     2.2.  Recommendations for a mPvD API implementation . . . . . .   4
-   3.  Discussion  . . . . . . . . . . . . . . . . . . . . . . . . .   4
-   4.  Requirements for new API functionality  . . . . . . . . . . .   5
-   5.  Requirements for updates to existing API functionality  . . .   5
-   6.  a . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .   5
-   7.  b . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .   5
-   8.  Host Operating System Requirements  . . . . . . . . . . . . .   6
-   9.  c . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .   6
-   10. New API Definitions . . . . . . . . . . . . . . . . . . . . .   6
-   11. Extensions for Existing Sockets API Functions . . . . . . . .   6
-   12. Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .   6
-   13. IANA Considerations . . . . . . . . . . . . . . . . . . . . .   6
-   14. Security Considerations . . . . . . . . . . . . . . . . . . .   6
-   15. References  . . . . . . . . . . . . . . . . . . . . . . . . .   7
-     15.1.  Normative References . . . . . . . . . . . . . . . . . .   7
-     15.2.  Informative References . . . . . . . . . . . . . . . . .   7
-   Appendix A.  Comparison with Android implementation . . . . . . .   7
-   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   7
+   2.  High level requirements . . . . . . . . . . . . . . . . . . .   3
+     2.1.  API functional requirements . . . . . . . . . . . . . . .   3
+     2.2.  Operating system requirements . . . . . . . . . . . . . .   3
+   3.  New API functions for learning about PvDs . . . . . . . . . .   4
+   4.  New API functions for scoping functionality to a specific PvD   4
+   5.  Updated API functions for scoping functionality to a specific
+       PvD . . . . . . . . . . . . . . . . . . . . . . . . . . . . .   4
+   6.  Special use PvDs  . . . . . . . . . . . . . . . . . . . . . .   4
+   7.  TL;DR . . . . . . . . . . . . . . . . . . . . . . . . . . . .   5
+     7.1.  Requirements for a mPvD API implementation  . . . . . . .   6
+     7.2.  Recommendations for a mPvD API implementation . . . . . .   6
+   8.  Discussion  . . . . . . . . . . . . . . . . . . . . . . . . .   6
+   9.  Requirements for new API functionality  . . . . . . . . . . .   6
+   10. Requirements for updates to existing API functionality  . . .   7
+   11. a . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .   7
+   12. b . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .   7
+   13. Host Operating System Requirements  . . . . . . . . . . . . .   7
+   14. c . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .   7
+   15. New API Definitions . . . . . . . . . . . . . . . . . . . . .   7
+   16. Extensions for Existing Sockets API Functions . . . . . . . .   7
+   17. Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .   7
+   18. IANA Considerations . . . . . . . . . . . . . . . . . . . . .   8
+   19. Security Considerations . . . . . . . . . . . . . . . . . . .   8
+   20. References  . . . . . . . . . . . . . . . . . . . . . . . . .   8
+     20.1.  Normative References . . . . . . . . . . . . . . . . . .   8
+     20.2.  Informative References . . . . . . . . . . . . . . . . .   8
+   Appendix A.  Comparison with Android implementation . . . . . . .   9
+   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   9
 
 1.  Introduction
 
@@ -97,22 +105,20 @@ Table of Contents
    exist a "default PvD", i.e. a PvD within which system functions
    requiring a PvD are to be performed.
 
+
+
+
+
+Kline                    Expires April 06, 2016                 [Page 2]
+
+Internet-Draft            MPVD Application API              October 2015
+
+
    Such a PvD MAY be a "null" or "empty" PvD: one in which no addresses
    or routes of any address family are configured and devoid of
    configuration information of any kind.  A system for which he default
    PvD was such a "null" PvD would effectively require all applications
    to be fully PvD-aware in order to function.
-
-
-
-
-
-
-
-Kline                    Expires April 01, 2016                 [Page 2]
-
-Internet-Draft            MPVD Application API            September 2015
-
 
    It is expected that most nodes will use a variety of information and
    administrative policy to promote one of a number of currently active
@@ -125,7 +131,102 @@ Internet-Draft            MPVD Application API            September 2015
    "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
    document are to be interpreted as described in RFC 2119 [RFC2119].
 
-2.  TL;DR
+2.  High level requirements
+
+2.1.  API functional requirements
+
+   At a high level, the functional requirements of a multiple
+   provisioning domain API ("MPvD API") are:
+
+   1.  learn about the availability of PvDs
+
+   2.  learn about the configuration contents of those PvDs
+
+   3.  allow the application to specify that certain functionality
+       should be executed within the scope of a particular PvD
+
+2.2.  Operating system requirements
+
+   - more like a strong host model, but one which scopes operations to
+   PvDs not interfaces (include weak/strong and m:n pvd:intf references)
+   - http://tools.ietf.org/html/rfc1122 section 3.3.4.2: Strong/Weak ES
+   model - PvD IDs could be thought of as site-local scopes - required
+   support includes: - route isolation - address isolation, update to
+   RFC6724 section 4 - actions peformed by the system must set PvD scope
+   automatically, even for non-PvD apps: - TCP accept() - incoming
+   datagrams to a UDP server - necessary for any API to provide
+   consistent and correct behaviour
+
+
+
+
+
+
+
+
+
+Kline                    Expires April 06, 2016                 [Page 3]
+
+Internet-Draft            MPVD Application API              October 2015
+
+
+3.  New API functions for learning about PvDs
+
+   - MUST existence (subject to policy) - both implicit and explicit
+   PvDs must also be included in the API response - PvD-aware
+   applications need to be able to specify that some functionality
+   should be scoped to an implicit PvD - updates to availability -
+   SHOULD new - SHOULD configuration changes (app may also learn via
+   errors) - MAY going away (useful) - MAY gone (app may also learn via
+   errors) - configuration - SHOULD be an API to get configuration
+   information for a specific PvD - such an API MUST be easily
+   extensible to support configuration information not yet considered
+
+4.  New API functions for scoping functionality to a specific PvD
+
+   - apps SHOULD be able to specify which PvD is to be used for network-
+   related functionality at the granularity of programming parallelism:
+   - per-process (and child processes) - per-thread - per-fiber - useful
+   for being able to start non-PvD-aware apps within a single PvD
+   context unbeknownst to them and operate correctly - indeed, this
+   could be used as a definition / validation that a PvD implemention is
+   correct: non-PvD-aware apps function correctly, with no negative
+   impact, in a single PvD without being PvD-aware
+
+5.  Updated API functions for scoping functionality to a specific PvD
+
+   - everything that implicitly used a single PvD, e.g. when a single
+   interface was connected to a single PvD network, SHOULD be extended
+   to be invoked with a PvD argument - sockets examples:
+
+6.  Special use PvDs
+
+   - "null" - useful to ensure networking functions fail (and fail
+   quickly) - "loopback" - useful to scope networking functions to the
+   node only - has only locally assigned addresses and routes specifying
+   local delivery and no default routes - MAY have other configuration
+   elements consisting of locally accessible services - TODO: ask for
+   help/clarification here - "default": PvD-aware system as a whole
+   SHOULD have a notion of currently active default PvD - without this
+   application behaviour will be highly system dependent (does the
+   system iterate through PvDs, in some order, trying to find a PvD in
+   which a certain op succeeds?) - this is the PvD to use for operations
+   for which a PvD must be selected and no explicity PvD API has been
+   used - as a matter of policy, this MAY be a "null" PvD, effectively
+   requiring all apps to be PvD-aware, or "loopback" to permit locally
+   communications only for non-PvD-aware apps - SHOULD be a way to
+   communicate changes in the default PvD - MUST be able to specify that
+   the default PvD is to be used
+
+
+
+
+Kline                    Expires April 06, 2016                 [Page 4]
+
+Internet-Draft            MPVD Application API              October 2015
+
+
+7.  TL;DR
 
    R1  An API call MUST exist whereby an application can learn the
        identifiers, or short handles, of all PvDs active on the system
@@ -156,20 +257,6 @@ Internet-Draft            MPVD Application API            September 2015
        short handle, returns elements of configuration information
        specific to that PvD.
 
-
-
-
-
-
-
-
-
-
-Kline                    Expires April 01, 2016                 [Page 3]
-
-Internet-Draft            MPVD Application API            September 2015
-
-
    R5  This API MUST be extenible, as PvD information is not guaranteed
        to be learned atomically nor is it guaranteed to be static.
        Furthermore, this API needs to be extensible in order to
@@ -187,14 +274,22 @@ Internet-Draft            MPVD Application API            September 2015
    R7  For every element of system functionality that has historically
        been performed in the context of a single, implicit PvD an API
        extension MUST exist allowing the application to specificy that
+
+
+
+Kline                    Expires April 06, 2016                 [Page 5]
+
+Internet-Draft            MPVD Application API              October 2015
+
+
        the same functionality be performed within the scope of an
        explicitly requested PvD (via identifier or handle).
 
-2.1.  Requirements for a mPvD API implementation
+7.1.  Requirements for a mPvD API implementation
 
-2.2.  Recommendations for a mPvD API implementation
+7.2.  Recommendations for a mPvD API implementation
 
-3.  Discussion
+8.  Discussion
 
    Two major categories of PvD application API requirements: - learning
    about PvDs - existence and changes in availability - configuration
@@ -213,20 +308,7 @@ Internet-Draft            MPVD Application API            September 2015
    requirements - identifying some existing uses of implicit pvds that
    will need to be updated to support explicit pvds
 
-
-
-
-
-
-
-
-
-Kline                    Expires April 01, 2016                 [Page 4]
-
-Internet-Draft            MPVD Application API            September 2015
-
-
-4.  Requirements for new API functionality
+9.  Requirements for new API functionality
 
    API implementors SHOULD provide a mechanism for an application to set
    its default PvD, i.e. the PvD to be used by API calls made without
@@ -248,6 +330,14 @@ Internet-Draft            MPVD Application API            September 2015
 
    o  get current default PvD, if system supports concept of default
 
+
+
+
+Kline                    Expires April 06, 2016                 [Page 6]
+
+Internet-Draft            MPVD Application API              October 2015
+
+
    o  get notified of changes to the set of available PvDs: new, change
       in default
 
@@ -258,29 +348,16 @@ Internet-Draft            MPVD Application API            September 2015
 
    o  ...
 
-5.  Requirements for updates to existing API functionality
+10.  Requirements for updates to existing API functionality
 
    In order to ease porting of non-PVD-aware applications as well as
    support non-PVD-aware applications in accordance with the principle
    of least surprise it is recommended that the following functionality
    be added to existing system networking APIs.
 
-6.  a
+11.  a
 
-7.  b
-
-
-
-
-
-
-
-
-
-Kline                    Expires April 01, 2016                 [Page 5]
-
-Internet-Draft            MPVD Application API            September 2015
-
+12.  b
 
    ## 1 PvD . RFC7556 section 2 . "A consistent set of network
    configuration information..." - includes: - participating interfaces
@@ -289,19 +366,19 @@ Internet-Draft            MPVD Application API            September 2015
    yet to be specified: metering, medium, captive portal URL, ...  - not
    learned atomically - not static
 
-8.  Host Operating System Requirements
+13.  Host Operating System Requirements
 
    In order to support the application's use of multiple PVDs, several
    requirements must be fulfilled by the part of the host operating
    system authorized to perform the required functions.
 
-9.  c
+14.  c
 
-10.  New API Definitions
+15.  New API Definitions
 
-11.  Extensions for Existing Sockets API Functions
+16.  Extensions for Existing Sockets API Functions
 
-12.  Acknowledgements
+17.  Acknowledgements
 
    The core concepts captured in this document were developed during the
    Android multinetworking effort by Lorenzo Colitti, Robert Greenwalt,
@@ -309,11 +386,19 @@ Internet-Draft            MPVD Application API            September 2015
 
    Additional thanks to the coffee shops of Tokyo.
 
-13.  IANA Considerations
+
+
+
+Kline                    Expires April 06, 2016                 [Page 7]
+
+Internet-Draft            MPVD Application API              October 2015
+
+
+18.  IANA Considerations
 
    This memo includes no request to IANA.
 
-14.  Security Considerations
+19.  Security Considerations
 
    The major new security impact of an mPvD API is that it becomes much
    simpler (by design) to write a functional application to create a
@@ -330,14 +415,6 @@ Internet-Draft            MPVD Application API            September 2015
    Operating system implementations have several points of potential
    policy control including:
 
-
-
-
-Kline                    Expires April 01, 2016                 [Page 6]
-
-Internet-Draft            MPVD Application API            September 2015
-
-
    o  use of certain PvDs MAY be restricted by policy (e.g. only
       approved users, groups, or individual applications might be
       granted access), and/or
@@ -346,22 +423,33 @@ Internet-Draft            MPVD Application API            September 2015
       restricted by policy (e.g. only approved users, groups, or
       individual applications might be granted access).
 
-15.  References
+20.  References
 
-15.1.  Normative References
+20.1.  Normative References
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119, March 1997.
 
    [min_ref]  authSurName, authInitials., "Minimal Reference", 2006.
 
-15.2.  Informative References
+20.2.  Informative References
 
    [DOMINATION]
               Mad Dominators, Inc., "Ultimate Plan for Taking Over the
               World", 1984, <http://www.example.com/dominator.html>.
 
    [I-D.narten-iana-considerations-rfc2434bis]
+
+
+
+
+
+
+Kline                    Expires April 06, 2016                 [Page 8]
+
+Internet-Draft            MPVD Application API              October 2015
+
+
               Narten, T. and H. Alvestrand, "Guidelines for Writing an
               IANA Considerations Section in RFCs", draft-narten-iana-
               considerations-rfc2434bis-09 (work in progress), March
@@ -379,20 +467,6 @@ Appendix A.  Comparison with Android implementation
    This becomes an Appendix.
 
 Author's Address
-
-
-
-
-
-
-
-
-
-
-Kline                    Expires April 01, 2016                 [Page 7]
-
-Internet-Draft            MPVD Application API            September 2015
-
 
    Erik Kline (editor)
    Google Japan KK
@@ -427,22 +501,4 @@ Internet-Draft            MPVD Application API            September 2015
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Kline                    Expires April 01, 2016                 [Page 8]
+Kline                    Expires April 06, 2016                 [Page 9]

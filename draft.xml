@@ -94,6 +94,124 @@ Insert an abstract: MANDATORY. This template is for creating an Internet Draft.
   </front>
 
   <middle>
+    <section title="Introduction">
+      <t>
+RFC 7556 provides all the essential guidance an API designer would need
+to support use of PvDs.
+
+This document aims to make some of the implications more concrete by
+discussion and example.
+      </t>
+      <t>
+All system functionality that has historically been performed in the context of a single, implicit PvD must be updated to support the same operations on an explicitly requested PvD.
+      </t>
+      <t>
+For backward compatibility for non-PvD-aware applications, there MUST exist a "default PvD", i.e. a PvD within which system functions requiring a PvD are to be performed.
+      </t>
+      <t>
+Such a PvD MAY be a "null" or "empty" PvD: one in which no addresses or routes of any address family are configured and devoid of configuration information of any kind.  A system for which
+he default PvD was such a "null" PvD would effectively require all applications to be fully PvD-aware in order to function.
+      </t>
+      <t>
+It is expected that most nodes will use a variety of information and administrative policy to promote one of a number of currently active PvDs to be the default for ease of backward compatibility, and to
+promote another active PvD in its place as circumstances change.
+      </t>
+
+      <section title="Requirements Language">
+        <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+        "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
+        document are to be interpreted as described in <xref
+        target="RFC2119">RFC 2119</xref>.</t>
+      </section>
+    </section>
+
+    <section title="High level requirements">
+      <section title="API functional requirements">
+        <t>
+At a high level, the functional requirements of a multiple provisioning domain API ("MPvD API") are:
+          <list style="numbers">
+            <t>
+learn about the availability of PvDs
+            </t>
+            <t>
+learn about the configuration contents of those PvDs
+            </t>
+            <t>
+allow the application to specify that certain functionality should be executed within the scope of a particular PvD
+            </t>
+          </list>
+        </t>
+      </section>
+
+      <section title="Operating system requirements">
+        <t>
+- more like a strong host model, but one which scopes operations to PvDs not interfaces (include weak/strong and m:n pvd:intf references)
+    - http://tools.ietf.org/html/rfc1122 section 3.3.4.2:  Strong/Weak ES model
+    - PvD IDs could be thought of as site-local scopes
+
+- required support includes:
+    - route isolation
+    - address isolation, update to RFC6724 section 4
+    - actions peformed by the system must set PvD scope automatically, even for non-PvD apps:
+        - TCP accept()
+        - incoming datagrams to a UDP server
+    - necessary for any API to provide consistent and correct behaviour
+        </t>
+      </section>
+    </section>
+
+    <section title="New API functions for learning about PvDs">
+      <t>
+- MUST existence (subject to policy)
+    - both implicit and explicit PvDs must also be included in the API response
+    - PvD-aware applications need to be able to specify that some functionality should be scoped to an implicit PvD
+- updates to availability
+    - SHOULD new
+    - SHOULD configuration changes (app may also learn via errors)
+    - MAY going away (useful)
+    - MAY gone (app may also learn via errors)
+- configuration
+    - SHOULD be an API to get configuration information for a specific PvD
+    - such an API MUST be easily extensible to support configuration information not yet considered
+      </t>
+    </section>
+
+    <section title="New API functions for scoping functionality to a specific PvD">
+      <t>
+- apps SHOULD be able to specify which PvD is to be used for network-related functionality at the granularity of programming parallelism:
+    - per-process (and child processes)
+    - per-thread
+    - per-fiber
+    - useful for being able to start non-PvD-aware apps within a single PvD context unbeknownst to them and operate correctly
+        - indeed, this could be used as a definition / validation that a PvD implemention is correct: non-PvD-aware apps function correctly, with no negative impact, in a single PvD without being PvD-aware
+      </t>
+    </section>
+
+    <section title="Updated API functions for scoping functionality to a specific PvD">
+      <t>
+- everything that implicitly used a single PvD, e.g. when a single interface was connected to a single PvD network, SHOULD be extended to be invoked with a PvD argument
+- sockets examples:
+      </t>
+    </section>
+
+    <section title="Special use PvDs">
+      <t>
+- "null"
+    - useful to ensure networking functions fail (and fail quickly)
+- "loopback"
+    - useful to scope networking functions to the node only
+    - has only locally assigned addresses and routes specifying local delivery and no default routes
+    - MAY have other configuration elements consisting of locally accessible services
+    - TODO: ask for help/clarification here
+- "default": PvD-aware system as a whole SHOULD have a notion of currently active default PvD
+    - without this application behaviour will be highly system dependent (does the system iterate through PvDs, in some order, trying to find a PvD in which a certain op succeeds?)
+    - this is the PvD to use for operations for which a PvD must be selected and no explicity PvD API has been used
+    - as a matter of policy, this MAY be a "null" PvD, effectively requiring all apps to be PvD-aware, or "loopback" to permit locally communications only for non-PvD-aware apps
+    - SHOULD be a way to communicate changes in the default PvD
+    - MUST be able to specify that the default PvD is to be used
+      </t>
+    </section>
+
 <!--
 
 Notes
@@ -123,8 +241,6 @@ can automatically do the right thing.
 
 what to do with process and thread default values on fork/exec
 
-http://tools.ietf.org/html/rfc1122 section 3.3.4.2:  Strong/Weak ES model
-
 RFC7556 section 5:
 5.1 Name Resolution
 
@@ -140,10 +256,6 @@ Ex: extended getaddrinfo with support for a pvd_handle_t argument.
 ## 2
 what things do apps need?
 
-- PvD configuration information
-    - get config data, get notified of updates
-- PvD selection
-    - granularity: system default + per process / thread / file descriptor / ...
 - socket-level control
     - control routing and address selection
     - automatic PvD "tagging" of incoming traffic not already classified
@@ -186,9 +298,6 @@ source address and routing selection
 
 some sockets API considerations
 
-- basically the strong host model
-    - except that PvD:interfaces is m:n
-    - PvD IDs could be thought of as site-local scopes
 - requests for a PvD not currently configured should return ENONET
     - other useful errors need to be returned throughout
     - some of this may want to be relaxed for privileged users
@@ -255,36 +364,6 @@ DNS resolution
 - what about getnameinfo(), res_query(), and getdnsapi ?
 
 -->
-    <section title="Introduction">
-      <t>
-RFC 7556 provides all the essential guidance an API designer would need
-to support use of PvDs.
-
-This document aims to make some of the implications more concrete by
-discussion and example.
-      </t>
-      <t>
-All system functionality that has historically been performed in the context of a single, implicit PvD must be updated to support the same operations on an explicitly requested PvD.
-      </t>
-      <t>
-For backward compatibility for non-PvD-aware applications, there MUST exist a "default PvD", i.e. a PvD within which system functions requiring a PvD are to be performed.
-      </t>
-      <t>
-Such a PvD MAY be a "null" or "empty" PvD: one in which no addresses or routes of any address family are configured and devoid of configuration information of any kind.  A system for which
-he default PvD was such a "null" PvD would effectively require all applications to be fully PvD-aware in order to function.
-      </t>
-      <t>
-It is expected that most nodes will use a variety of information and administrative policy to promote one of a number of currently active PvDs to be the default for ease of backward compatibility, and to
-promote another active PvD in its place as circumstances change.
-      </t>
-
-      <section title="Requirements Language">
-        <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
-        "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
-        document are to be interpreted as described in <xref
-        target="RFC2119">RFC 2119</xref>.</t>
-      </section>
-    </section>
 
 <!--
 Explicit versus Implicit PvDs
