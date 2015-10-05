@@ -7,9 +7,6 @@
      An alternate method (rfc include) is described in the references. -->
 
 <!ENTITY RFC2119 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml">
-<!ENTITY RFC2629 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2629.xml">
-<!ENTITY RFC3552 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.3552.xml">
-<!ENTITY I-D.narten-iana-considerations-rfc2434bis SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.narten-iana-considerations-rfc2434bis.xml">
 
 <!ENTITY RFC3493 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.3493.xml">
 <!ENTITY RFC6418 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6418.xml">
@@ -48,12 +45,12 @@
      you can add the attributes updates="NNNN" and obsoletes="NNNN"
      they will automatically be output with "(if approved)" -->
 
+
   <front>
     <title abbrev="MPvD API">Multiple Provisioning Domains API Requirements</title>
 
     <author fullname="Erik Kline"
-            initials="E." surname="Kline"
-            role="editor">
+            initials="E." surname="Kline">
       <organization>Google Japan KK</organization>
       <address>
         <postal>
@@ -94,6 +91,7 @@ Insert an abstract: MANDATORY. This template is for creating an Internet Draft.
       </t>
     </abstract>
   </front>
+
 
   <middle>
     <section title="Introduction">
@@ -162,7 +160,7 @@ The rest of this document is concerned with:
 - identifying new system requirements
 - identifying some existing uses of implicit pvds that will need to be updated to support explicit pvds
       </t>
-      <section title="API functional requirements">
+      <section title="Functional requirements for an API">
         <t>
 Two major categories of PvD application API requirements:
 - learning about PvDs
@@ -192,7 +190,7 @@ allow the application to specify that certain functionality should be executed w
         </t>
       </section>
 
-      <section title="Operating system requirements">
+      <section title="Functional requirements for a PvD-aware operating system">
       <t>
 In order to support the application's use of multiple PVDs, several
 requirements must be fulfilled by the part of the host operating system
@@ -227,6 +225,39 @@ source address and routing selection
         - TCP accept()
         - incoming datagrams to a UDP server
     - necessary for any API to provide consistent and correct behaviour
+        </t>
+      </section>
+    </section>
+
+    <section title="Conceptual PvDs">
+      <section anchor="null_pvd" title="The 'null' PvD">
+        <t>
+Useful to ensure networking functions fail (and fail quickly)
+If there are no PvDs accessible to a user/group/application, either as a
+matter of policy (insufficient privileges) or as a matter of natural
+circumstance (the node is not connected to any network), the 'null' PvD may
+be a suitable PvD for the API to return to application queries or to apply as
+the PvD of use in the absence of other explicitly reference PvDs.
+        </t>
+      </section>
+      <section anchor="loopback_pvd" title="The 'loopback' PvD">
+        <t>
+    - useful to scope networking functions to the node only
+    - has only locally assigned addresses and routes specifying local delivery and no default routes
+    - MAY have other configuration elements consisting of locally accessible services
+    - TODO: ask for help/clarification here
+        </t>
+      </section>
+      <section anchor="default_pvd" title="The 'default' PvD">
+        <t>
+PvD-aware system as a whole SHOULD have a notion of currently active default PvD
+        </t>
+        <t>
+    - without this application behaviour will be highly system dependent (does the system iterate through PvDs, in some order, trying to find a PvD in which a certain op succeeds?)
+    - this is the PvD to use for operations for which a PvD must be selected and no explicity PvD API has been used
+    - as a matter of policy, this MAY be a "null" PvD, effectively requiring all apps to be PvD-aware, or "loopback" to permit locally communications only for non-PvD-aware apps
+    - SHOULD be a way to communicate changes in the default PvD
+    - MUST be able to specify that the default PvD is to be used
         </t>
       </section>
     </section>
@@ -481,39 +512,6 @@ sendmsg() / recvmsg() cmsg semantics
 
     </section>
 
-    <section title="Special use PvDs">
-      <section anchor="null_pvd" title="The 'null' PvD">
-        <t>
-Useful to ensure networking functions fail (and fail quickly)
-If there are no PvDs accessible to a user/group/application, either as a
-matter of policy (insufficient privileges) or as a matter of natural
-circumstance (the node is not connected to any network), the 'null' PvD may
-be a suitable PvD for the API to return to application queries or to apply as
-the PvD of use in the absence of other explicitly reference PvDs.
-        </t>
-      </section>
-      <section anchor="loopback_pvd" title="The 'loopback' PvD">
-        <t>
-    - useful to scope networking functions to the node only
-    - has only locally assigned addresses and routes specifying local delivery and no default routes
-    - MAY have other configuration elements consisting of locally accessible services
-    - TODO: ask for help/clarification here
-        </t>
-      </section>
-      <section anchor="default_pvd" title="The 'default' PvD">
-        <t>
-PvD-aware system as a whole SHOULD have a notion of currently active default PvD
-        </t>
-        <t>
-    - without this application behaviour will be highly system dependent (does the system iterate through PvDs, in some order, trying to find a PvD in which a certain op succeeds?)
-    - this is the PvD to use for operations for which a PvD must be selected and no explicity PvD API has been used
-    - as a matter of policy, this MAY be a "null" PvD, effectively requiring all apps to be PvD-aware, or "loopback" to permit locally communications only for non-PvD-aware apps
-    - SHOULD be a way to communicate changes in the default PvD
-    - MUST be able to specify that the default PvD is to be used
-        </t>
-      </section>
-    </section>
-
 <!--
 
 Notes
@@ -706,7 +704,6 @@ use of more than one PvD (or the MPvD API itself) MAY be similarly restricted.
     </section>
   </middle>
 
-  <!--  *****BACK MATTER ***** -->
 
   <back>
     <!-- References split into informative and normative -->
@@ -723,51 +720,20 @@ use of more than one PvD (or the MPvD API itself) MAY be similarly restricted.
      filing system or remote ones accessed by http (http://domain/dir/... ).-->
 
     <references title="Normative References">
-      <!--?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml"?-->
       &RFC2119;
-
-      <reference anchor="min_ref">
-        <!-- the following is the minimum to make xml2rfc happy -->
-
-        <front>
-          <title>Minimal Reference</title>
-
-          <author initials="authInitials" surname="authSurName">
-            <organization></organization>
-          </author>
-
-          <date year="2006" />
-        </front>
-      </reference>
+      &RFC6724;
+      &RFC7556;
     </references>
 
     <references title="Informative References">
-      <!-- Here we use entities that we defined at the beginning. -->
-
-      &RFC2629;
-
-      &RFC3552;
-
-      &I-D.narten-iana-considerations-rfc2434bis;
-
-      <!-- A reference written by an organization not a person. -->
-
-      <reference anchor="DOMINATION"
-                 target="http://www.example.com/dominator.html">
-        <front>
-          <title>Ultimate Plan for Taking Over the World</title>
-
-          <author>
-            <organization>Mad Dominators, Inc.</organization>
-          </author>
-
-          <date year="1984" />
-        </front>
-      </reference>
+      &RFC6418;
+      &RFC6419;
     </references>
 
+<!--
     <section anchor="android-comparison" title="Comparison with Android implementation">
       <t>This becomes an Appendix.</t>
     </section>
+-->
   </back>
 </rfc>
