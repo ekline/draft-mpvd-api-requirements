@@ -175,16 +175,18 @@ Two major categories of PvD application API requirements:
 https://tools.ietf.org/html/rfc7556#section-5.2
         </t>
         <t>
-At a high level, the functional requirements of a multiple provisioning domain API ("MPvD API") are:
+At a high level, there are two fundamental functional requirements of any
+multiple provisioning domain API ("MPvD API") implementation:
           <list style="numbers">
             <t>
-learn about the availability of PvDs
+It MUST be possible for an application to learn about the availability,
+life cycle, and properties of any and all provisioning domains accessible by
+the application over the lifetime of the its interest in this information.
             </t>
             <t>
-learn about the configuration contents of those PvDs
-            </t>
-            <t>
-allow the application to specify that certain functionality should be executed within the scope of a particular PvD
+It MUST be possible for an application to specify that certain functionality
+must be executed within the scope of a particular PvD (learned using the API
+elements that fulfill the first requirement).
             </t>
           </list>
         </t>
