@@ -39,7 +39,10 @@
 <?rfc subcompact="no" ?>
 <!-- keep one blank line between list items -->
 <!-- end of list of popular I-D processing instructions -->
-<rfc category="info" docName="draft-kline-mif-pvd-application-api-00" ipr="trust200902">
+<rfc category="info"
+     ipr="trust200902"
+     docName="draft-kline-mif-pvd-userspace-api-00">
+
   <!-- category values: std, bcp, info, exp, and historic
      ipr values: full3667, noModification3667, noDerivatives3667
      you can add the attributes updates="NNNN" and obsoletes="NNNN"
@@ -96,25 +99,21 @@ Insert an abstract: MANDATORY. This template is for creating an Internet Draft.
   <middle>
     <section title="Introduction">
       <t>
-RFC 7556 provides all the essential guidance an API designer would need
-to support use of PvDs.
-
-This document aims to make some of the implications more concrete by
-discussion and example.
+<xref target="RFC7556">RFC 7556</xref> provides the essential conceptual
+guidance an API designer would need to support use of PvDs.  This document
+aims to capture the requirements for an API that can be used by applications
+that would be considered "advanced", according to
+<eref target="https://tools.ietf.org/html/rfc7556#section-6.3"
+      >section 6.3</eref> of <xref target="RFC7556">RFC 7556</xref>.  The
+<eref target="https://tools.ietf.org/html/rfc7556#section-6.1"
+      >"basic"</eref> and
+<eref target="https://tools.ietf.org/html/rfc7556#section-6.2"
+      >"intermediate"</eref> API support levels can in principle be implemented
+by means of layers wrapping the "advanced" API.
       </t>
       <t>
-All system functionality that has historically been performed in the context of a single, implicit PvD must be updated to support the same operations on an explicitly requested PvD.
-      </t>
-      <t>
-For backward compatibility for non-PvD-aware applications, there MUST exist a "default PvD", i.e. a PvD within which system functions requiring a PvD are to be performed.
-      </t>
-      <t>
-Such a PvD MAY be a "null" or "empty" PvD: one in which no addresses or routes of any address family are configured and devoid of configuration information of any kind.  A system for which
-he default PvD was such a "null" PvD would effectively require all applications to be fully PvD-aware in order to function.
-      </t>
-      <t>
-It is expected that most nodes will use a variety of information and administrative policy to promote one of a number of currently active PvDs to be the default for ease of backward compatibility, and to
-promote another active PvD in its place as circumstances change.
+This document also attempts to make some of the API implementation requirements
+more concrete by discussion and example.
       </t>
 
       <section title="Requirements Language">
@@ -125,13 +124,38 @@ promote another active PvD in its place as circumstances change.
       </section>
     </section>
 
-    <section anchor="b" title="b">
+    <section anchor="high_level_reqs" title="High level requirements">
       <t>
-## 1
-PvD
-
-. RFC7556 section 2
-    . "A consistent set of network configuration information..."
+As described in
+<eref target="https://tools.ietf.org/html/rfc7556#section-2">section 2</eref>
+of <xref target="RFC7556">RFC 7556</xref>, a Provisioning Domain ("PvD") is
+a "consistent set of network configuration information."
+      </t>
+      <t>
+At the highest level, the requirements for a PvD API amount to providing
+mechanisms for applications such that they can:
+        <list counter="reqs" hangIndent="4" style="format R%d">
+          <t>
+observe accessible PvDs<vspace blankLines="1"/>
+It MUST be possible for an application to be informed of the set of all PvDs it
+can currently access, and to be informed of changes to this set.
+          </t>
+          <t>
+observe configuration elements of an accessible PvD<vspace blankLines="1"/>
+It MUST be possible to learn requested configuration information of any
+accessible PvD, and to be informed of any changes to the configuration
+information comprising an accessible PvD.
+          </t>
+          <t>
+scope networking functionality to a specified PvD<vspace blankLines="1"/>
+It MUST be possible for an application to specify the PvD within which
+networking functionality must be scoped at the same level of granularity,
+or greater, as that which is available to applications operating on a simply
+connected node (i.e. with only a single, implicit PvD).
+          </t>
+        </list>
+      </t>
+      <t>
 
 - includes:
     - participating interfaces
@@ -145,16 +169,18 @@ PvD
 - not static
       </t>
       <t>
+All system functionality that has historically been performed in the context of a single, implicit PvD must be updated to support the same operations on an explicitly requested PvD.
       </t>
-    </section>
-
-    <section title="High level requirements">
       <t>
-High-level API requirements are:
-- it must be possible to learn of pvds coming and going
-- it should be possible to learn pvd configuration information and updates
-- everything done today with an implicit pvd assumed must be doable with an explicit pvd
+For backward compatibility for non-PvD-aware applications, there MUST exist a "default PvD", i.e. a PvD within which system functions requiring a PvD are to be performed.
       </t>
+      <t>
+It is expected that most nodes will use a variety of information coupled with administrative policy to promote one of a number of currently active PvDs to be the default for ease of backward compatibility, and to
+promote another active PvD in its place as circumstances change.
+      </t>
+      <t>
+      </t>
+
       <t>
 The rest of this document is concerned with:
 - identifying new system requirements
@@ -195,7 +221,7 @@ elements that fulfill the first requirement).
       <section title="Functional requirements for a PvD-aware operating system">
       <t>
 In order to support the application's use of multiple PVDs, several
-requirements must be fulfilled by the part of the host operating system
+requirements must be fulfilled by the node's operating system
 authorized to perform the required functions.
 
 ## 5
@@ -677,6 +703,10 @@ Additional thanks to the coffee shops of Tokyo.
     </section>
 
     <section anchor="Security" title="Security Considerations">
+      <t>
+Consider whether 7556 section 8 should be referenced.  Possibly not, since
+those seem to be focused on external PvD-altering threats.
+      </t>
       <t>
 The major new security impact of an MPvD API is that it becomes much
 simpler (by design) to write a functional application to create a bridging
