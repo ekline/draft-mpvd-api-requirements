@@ -109,7 +109,7 @@ that would be considered "advanced", according to
       >"basic"</eref> and
 <eref target="https://tools.ietf.org/html/rfc7556#section-6.2"
       >"intermediate"</eref> API support levels can in principle be implemented
-by means of layers wrapping the "advanced" API.
+by means of layers wrapping the advanced API.
       </t>
       <t>
 This document also attempts to make some of the API implementation requirements
@@ -132,31 +132,6 @@ of <xref target="RFC7556">RFC 7556</xref>, a Provisioning Domain ("PvD") is
 a "consistent set of network configuration information."
       </t>
       <t>
-At the highest level, the requirements for a PvD API amount to providing
-mechanisms for applications such that they can:
-        <list counter="reqs" hangIndent="4" style="format R%d">
-          <t>
-observe accessible PvDs<vspace blankLines="1"/>
-It MUST be possible for an application to be informed of the set of all PvDs it
-can currently access, and to be informed of changes to this set.
-          </t>
-          <t>
-observe configuration elements of an accessible PvD<vspace blankLines="1"/>
-It MUST be possible to learn requested configuration information of any
-accessible PvD, and to be informed of any changes to the configuration
-information comprising an accessible PvD.
-          </t>
-          <t>
-scope networking functionality to a specified PvD<vspace blankLines="1"/>
-It MUST be possible for an application to specify the PvD within which
-networking functionality must be scoped at the same level of granularity,
-or greater, as that which is available to applications operating on a simply
-connected node (i.e. with only a single, implicit PvD).
-          </t>
-        </list>
-      </t>
-      <t>
-
 - includes:
     - participating interfaces
     - addresses
@@ -167,9 +142,6 @@ connected node (i.e. with only a single, implicit PvD).
     - yet to be specified: metering, medium, captive portal URL, ...
 - not learned atomically
 - not static
-      </t>
-      <t>
-All system functionality that has historically been performed in the context of a single, implicit PvD must be updated to support the same operations on an explicitly requested PvD.
       </t>
       <t>
 For backward compatibility for non-PvD-aware applications, there MUST exist a "default PvD", i.e. a PvD within which system functions requiring a PvD are to be performed.
@@ -186,6 +158,7 @@ The rest of this document is concerned with:
 - identifying new system requirements
 - identifying some existing uses of implicit pvds that will need to be updated to support explicit pvds
       </t>
+
       <section title="Functional requirements for an API">
         <t>
 Two major categories of PvD application API requirements:
@@ -200,22 +173,33 @@ Two major categories of PvD application API requirements:
 (consistent use)
 https://tools.ietf.org/html/rfc7556#section-5.2
         </t>
-        <t>
-At a high level, there are two fundamental functional requirements of any
-multiple provisioning domain API ("MPvD API") implementation:
-          <list style="numbers">
-            <t>
-It MUST be possible for an application to learn about the availability,
-life cycle, and properties of any and all provisioning domains accessible by
-the application over the lifetime of the its interest in this information.
-            </t>
-            <t>
-It MUST be possible for an application to specify that certain functionality
-must be executed within the scope of a particular PvD (learned using the API
-elements that fulfill the first requirement).
-            </t>
-          </list>
-        </t>
+      <t>
+At the highest level, the requirements for an API that enables applications to
+make sophisticated use of multiple PvDs amount to providing mechanisms by
+which they can:
+        <list counter="reqs" hangIndent="4" style="format R%d">
+          <t>
+observe accessible PvDs<vspace blankLines="1"/>
+It MUST be possible for an application to be informed of the set of all PvDs it
+can currently access, and to be informed of changes to this set.
+          </t>
+          <t>
+observe configuration elements of an accessible PvD<vspace blankLines="1"/>
+It MUST be possible to learn requested configuration information of any
+accessible PvD, and to be informed of any changes to the configuration
+information comprising an accessible PvD.
+          </t>
+          <t>
+scope networking functionality to a specified PvD<vspace blankLines="1"/>
+For every existing API function that interacts with the node's networking
+stack, be it at a relatively high level like
+<eref target="https://tools.ietf.org/html/rfc3493#section-6.1"
+  >getaddrinfo()</eref> or at the level of something like Sockets API's
+sendmsg(), there MUST be a means by which an application can specify the
+PvD within which networking operations are to be restricted. 
+          </t>
+        </list>
+      </t>
       </section>
 
       <section title="Functional requirements for a PvD-aware operating system">
