@@ -9,6 +9,7 @@
 <!ENTITY RFC2119 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml">
 
 <!ENTITY RFC3493 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.3493.xml">
+<!ENTITY RFC4191 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4191.xml">
 <!ENTITY RFC6418 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6418.xml">
 <!ENTITY RFC6419 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6419.xml">
 <!ENTITY RFC6724 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6724.xml">
@@ -41,7 +42,7 @@
 <!-- end of list of popular I-D processing instructions -->
 <rfc category="info"
      ipr="trust200902"
-     docName="draft-kline-mif-pvd-userspace-api-00">
+     docName="draft-kline-mif-pvdapireqs-00">
 
   <!-- category values: std, bcp, info, exp, and historic
      ipr values: full3667, noModification3667, noDerivatives3667
@@ -58,7 +59,7 @@
       <address>
         <postal>
           <street>Roppongi 6-10-1</street>
-          <street>Mori Tower, 26th floor</street>
+          <street>Mori Tower, 44th floor</street>
           <city>Minato</city>
           <region>Tokyo</region>
           <code>106-6128</code>
@@ -139,60 +140,52 @@ more concrete by discussion and example.
 As described in
 <eref target="https://tools.ietf.org/html/rfc7556#section-2">section 2</eref>
 of <xref target="RFC7556">RFC 7556</xref>, a Provisioning Domain ("PvD") is
-a "consistent set of network configuration information."
+a "consistent set of network configuration information."  This includes
+information like:
+        <list style="symbols">
+<t>the list of participating interfaces</t>
+<t>IPv4 and IPv6 addresses</t>
+<t>IPv4 and IPv6 routes: both default routes and more specifics
+   (such as may be learned via <xref target="RFC4191">RFC 4191</xref>
+    Route Information Options ("RIOs"))</t>
+<t>DNS nameservers, search path, et cetera</t>
+<t>HTTP proxy configuration</t>
+        </list>
+and undoubtedly many more configuration elements yet to be specified (like
+metering hints, transmission medium and speed, captive portal URL, et cetera).
       </t>
       <t>
-- includes:
-    - participating interfaces
-    - addresses
-    - routes (default routes and more specifics)
-    - but also RIO -type information
-    - DNS servers and search path
-    - HTTP proxy
-    - yet to be specified: metering, medium, captive portal URL, ...
-- not learned atomically
-- not static
+This configuration information as whole may not be able to be learned
+atomically, may need to be synthesized from multiple sources including
+administrative provisioning, and cannot be presumed to be unchanging over the
+lifetime of a node's association with a given PvD.
       </t>
       <t>
-      </t>
-
-      <t>
-The rest of this document is concerned with:
-- identifying new system requirements
-- identifying some existing uses of implicit pvds that will need to be updated to support explicit pvds
+In order for an application to make
+<eref target="https://tools.ietf.org/html/rfc7556#section-5.2"
+  >consistent use</eref> of a given PvD's network configuration several
+requirements are placed upon the API itself and the host operating system
+providing the API.
       </t>
 
       <section title="Functional requirements for an API">
         <t>
-Two major categories of PvD application API requirements:
-- learning about PvDs
-    - existence and changes in availability
-    - configuration data contained within a PvD ID and changes of configuration information
-- selection of a PvD to scope various operations:
-    - selection of configuration information
-    - selection of source addresses
-    - selection of routing information
-
-(consistent use)
-https://tools.ietf.org/html/rfc7556#section-5.2
-        </t>
-      <t>
 At the highest level, the requirements for an API that enables applications to
 make sophisticated use of multiple PvDs amount to providing mechanisms by
 which they can:
-        <list counter="reqs" hangIndent="4" style="format R%d">
-          <t>
+          <list counter="reqs" hangIndent="4" style="format R%d">
+            <t>
 observe accessible PvDs<vspace blankLines="1"/>
 It MUST be possible for an application to be informed of the set of all PvDs it
 can currently access, and to be informed of changes to this set.
-          </t>
-          <t>
+            </t>
+            <t>
 observe configuration elements of an accessible PvD<vspace blankLines="1"/>
 It MUST be possible to learn requested configuration information of any
 accessible PvD, and to be informed of any changes to the configuration
 information comprising an accessible PvD.
-          </t>
-          <t>
+            </t>
+            <t>
 scope networking functionality to a specified PvD<vspace blankLines="1"/>
 For every existing API function that interacts with the node's networking
 stack, be it at a relatively high level like
@@ -200,46 +193,50 @@ stack, be it at a relatively high level like
   >getaddrinfo()</eref> or at the level of something like Sockets API's
 sendmsg(), there MUST be a means by which an application can specify the
 PvD within which networking operations are to be restricted. 
-          </t>
-        </list>
-      </t>
+            </t>
+          </list>
+        </t>
       </section>
 
       <section title="Functional requirements for a PvD-aware operating system">
-      <t>
+        <t>
 In order to support the application's use of multiple PVDs, several
 requirements must be fulfilled by the node's operating system
 authorized to perform the required functions.
 
+- more like a strong host model, but one which scopes operations to PvDs not interfaces (include weak/strong and m:n pvd:intf references)
+    - http://tools.ietf.org/html/rfc1122 section 3.3.4.2:  Strong/Weak ES model
+    - PvD IDs could be thought of as site-local scopes
+
+    - necessary for any API to provide consistent and correct behaviour
 ## 5
 source address and routing selection
 
 - if a PvD has been specified:
     - it is RECOMMENDED that source address selection be restricted to PvD addresses
         - update RFC6274#section-4
+
 - it is important to return errors
     - might have two PvDs active: one IPv4-only and one IPv6-only
         - ENONET, EPROTONOSUPPORT, EADDRNOTAVAIL, EHOSTUNREACH, ...
+
 - destination reachability:
     - userspace libraries often use connect() tricks to obtain source addresses for sorting
     - this MUST use the routing configuration of the desired PvD
+
 - getaddrinfo() and AI_ADDRCONFIG
     - RFC3493#section-6.1 "...shall be returned only if an IPv4/v6 address is configured on the local system..." -> "... within the requested PvD"
-
-      </t>
+        </t>
 
         <t>
-- more like a strong host model, but one which scopes operations to PvDs not interfaces (include weak/strong and m:n pvd:intf references)
-    - http://tools.ietf.org/html/rfc1122 section 3.3.4.2:  Strong/Weak ES model
-    - PvD IDs could be thought of as site-local scopes
-
 - required support includes:
     - route isolation
     - address isolation, update to RFC6724 section 4
+
+system-side PvD tagging
     - actions peformed by the system must set PvD scope automatically, even for non-PvD apps:
         - TCP accept()
         - incoming datagrams to a UDP server
-    - necessary for any API to provide consistent and correct behaviour
         </t>
       </section>
     </section>
@@ -753,6 +750,7 @@ use of more than one PvD (or the MPvD API itself) MAY be similarly restricted.
     </references>
 
     <references title="Informative References">
+      &RFC4191;
       &RFC6418;
       &RFC6419;
     </references>
