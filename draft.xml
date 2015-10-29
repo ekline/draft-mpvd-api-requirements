@@ -6,9 +6,10 @@
      There has to be one entity for each item to be referenced.
      An alternate method (rfc include) is described in the references. -->
 
+<!ENTITY RFC1122 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.1122.xml">
 <!ENTITY RFC2119 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml">
-
 <!ENTITY RFC3493 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.3493.xml">
+<!ENTITY RFC3879 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.3879.xml">
 <!ENTITY RFC4191 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4191.xml">
 <!ENTITY RFC6418 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6418.xml">
 <!ENTITY RFC6419 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6419.xml">
@@ -195,43 +196,55 @@ sendmsg(), there MUST be a means by which an application can specify the
 PvD within which networking operations are to be restricted. 
             </t>
           </list>
+Used by applications in this way, a Provisioning Domain is perhaps a more
+useful operational definition for the original IPv6 concept of a
+"site-local scope" than the <xref target="RFC3879">ill-fated</xref>,
+<eref target="https://tools.ietf.org/html/rfc3879#section-2.5"
+  >"ill-defined concept"</eref> of a site.
         </t>
       </section>
 
-      <section title="Functional requirements for a PvD-aware operating system">
+      <section title="Functional requirements for the supporting operating system">
         <t>
-In order to support the application's use of multiple PVDs, several
-requirements must be fulfilled by the node's operating system
-authorized to perform the required functions.
-
-- more like a strong host model, but one which scopes operations to PvDs not interfaces (include weak/strong and m:n pvd:intf references)
-    - http://tools.ietf.org/html/rfc1122 section 3.3.4.2:  Strong/Weak ES model
-    - PvD IDs could be thought of as site-local scopes
-
-    - necessary for any API to provide consistent and correct behaviour
-## 5
-source address and routing selection
+The multiple PvD model of host behaviour is perhaps closer to the Strong End
+System Model than the Weak End System Model characterized in
+<xref target="RFC1122">RFC 1122</xref>
+<eref target="https://tools.ietf.org/html/rfc1122#section 3.3.4.2"
+  >section 3.3.4.2</eref>, but owing to its recognition of a many-to-many
+relationship between interfaces and PvDs is a unique model unto itself.
+        </t>
+        <t>
+In the PvD-aware End System Model, the "two key requirement issues related to
+multihoming" are restated as:
+          <list hangIndent="4" style="letters">
+            <t>
+A host MAY silently discard an incoming datagram whose destination address
+does not correspond to any PvD associated with the physical (or virtual)
+interface through which it is received.
+            </t>
+            <t>
+A host MUST restrict itself to sending (non-source-routed) IP datagrams only
+through the physical (or virtual) interfaces that correspond to the PvD
+associated with the IP source address of the datagrams.
+            </t>
+          </list>
+        </t>
+        <t>
+In order to support a PvD-aware application's use of multiple PVDs, several
+additional requirements must be met by the host operating system.
 
 - if a PvD has been specified:
     - it is RECOMMENDED that source address selection be restricted to PvD addresses
         - update RFC6274#section-4
-
-- it is important to return errors
-    - might have two PvDs active: one IPv4-only and one IPv6-only
-        - ENONET, EPROTONOSUPPORT, EADDRNOTAVAIL, EHOSTUNREACH, ...
+    - address isolation, update to RFC6724 section 4
 
 - destination reachability:
+    - route isolation
     - userspace libraries often use connect() tricks to obtain source addresses for sorting
     - this MUST use the routing configuration of the desired PvD
 
 - getaddrinfo() and AI_ADDRCONFIG
     - RFC3493#section-6.1 "...shall be returned only if an IPv4/v6 address is configured on the local system..." -> "... within the requested PvD"
-        </t>
-
-        <t>
-- required support includes:
-    - route isolation
-    - address isolation, update to RFC6724 section 4
 
 system-side PvD tagging
     - actions peformed by the system must set PvD scope automatically, even for non-PvD apps:
@@ -744,12 +757,14 @@ use of more than one PvD (or the MPvD API itself) MAY be similarly restricted.
      filing system or remote ones accessed by http (http://domain/dir/... ).-->
 
     <references title="Normative References">
+      &RFC1122;
       &RFC2119;
       &RFC6724;
       &RFC7556;
     </references>
 
     <references title="Informative References">
+      &RFC3879;
       &RFC4191;
       &RFC6418;
       &RFC6419;
