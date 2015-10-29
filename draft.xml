@@ -90,7 +90,17 @@
 
     <abstract>
       <t>
-Insert an abstract: MANDATORY. This template is for creating an Internet Draft.
+<xref target="RFC7556">RFC 7556</xref> provides the essential conceptual
+guidance an API designer would need to support use of PvDs.  This document
+aims to capture the requirements for an API that can be used by applications
+that would be considered "advanced", according to
+<eref target="https://tools.ietf.org/html/rfc7556#section-6.3"
+      >section 6.3</eref> of <xref target="RFC7556">RFC 7556</xref>.  The
+<eref target="https://tools.ietf.org/html/rfc7556#section-6.1"
+      >"basic"</eref> and
+<eref target="https://tools.ietf.org/html/rfc7556#section-6.2"
+      >"intermediate"</eref> API support levels can in principle be implemented
+by means of layers wrapping the advanced API.
       </t>
     </abstract>
   </front>
@@ -142,13 +152,6 @@ a "consistent set of network configuration information."
     - yet to be specified: metering, medium, captive portal URL, ...
 - not learned atomically
 - not static
-      </t>
-      <t>
-For backward compatibility for non-PvD-aware applications, there MUST exist a "default PvD", i.e. a PvD within which system functions requiring a PvD are to be performed.
-      </t>
-      <t>
-It is expected that most nodes will use a variety of information coupled with administrative policy to promote one of a number of currently active PvDs to be the default for ease of backward compatibility, and to
-promote another active PvD in its place as circumstances change.
       </t>
       <t>
       </t>
@@ -265,12 +268,20 @@ the PvD of use in the absence of other explicitly reference PvDs.
 PvD-aware system as a whole SHOULD have a notion of currently active default PvD
         </t>
         <t>
+- makes "basic 6.1" trivial
     - without this application behaviour will be highly system dependent (does the system iterate through PvDs, in some order, trying to find a PvD in which a certain op succeeds?)
     - this is the PvD to use for operations for which a PvD must be selected and no explicity PvD API has been used
     - as a matter of policy, this MAY be a "null" PvD, effectively requiring all apps to be PvD-aware, or "loopback" to permit locally communications only for non-PvD-aware apps
     - SHOULD be a way to communicate changes in the default PvD
     - MUST be able to specify that the default PvD is to be used
         </t>
+      <t>
+For backward compatibility for non-PvD-aware applications, there MUST exist a "default PvD", i.e. a PvD within which system functions requiring a PvD are to be performed.
+      </t>
+      <t>
+It is expected that most nodes will use a variety of information coupled with administrative policy to promote one of a number of currently active PvDs to be the default for ease of backward compatibility, and to
+promote another active PvD in its place as circumstances change.
+      </t>
       </section>
     </section>
 

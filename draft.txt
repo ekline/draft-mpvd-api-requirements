@@ -4,8 +4,8 @@
 
 Internet Engineering Task Force                                 E. Kline
 Internet-Draft                                           Google Japan KK
-Intended status: Informational                          October 28, 2015
-Expires: April 30, 2016
+Intended status: Informational                          October 29, 2015
+Expires: May 1, 2016
 
 
              Multiple Provisioning Domains API Requirements
@@ -13,8 +13,13 @@ Expires: April 30, 2016
 
 Abstract
 
-   Insert an abstract: MANDATORY.  This template is for creating an
-   Internet Draft.
+   RFC 7556 [RFC7556] provides the essential conceptual guidance an API
+   designer would need to support use of PvDs.  This document aims to
+   capture the requirements for an API that can be used by applications
+   that would be considered "advanced", according to section 6.3 [1] of
+   RFC 7556 [RFC7556].  The "basic" [2] and "intermediate" [3] API
+   support levels can in principle be implemented by means of layers
+   wrapping the advanced API.
 
 Status of This Memo
 
@@ -31,7 +36,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on April 30, 2016.
+   This Internet-Draft will expire on May 1, 2016.
 
 Copyright Notice
 
@@ -45,18 +50,16 @@ Copyright Notice
    carefully, as they describe your rights and restrictions with respect
    to this document.  Code Components extracted from this document must
    include Simplified BSD License text as described in Section 4.e of
-   the Trust Legal Provisions and are provided without warranty as
-   described in the Simplified BSD License.
 
 
 
-
-
-
-Kline                    Expires April 30, 2016                 [Page 1]
+Kline                      Expires May 1, 2016                  [Page 1]
 
 Internet-Draft                  MPvD API                    October 2015
 
+
+   the Trust Legal Provisions and are provided without warranty as
+   described in the Simplified BSD License.
 
 Table of Contents
 
@@ -67,7 +70,7 @@ Table of Contents
      2.2.  Functional requirements for a PvD-aware operating system    4
    3.  Conceptual PvDs . . . . . . . . . . . . . . . . . . . . . . .   4
      3.1.  The 'null' PvD  . . . . . . . . . . . . . . . . . . . . .   4
-     3.2.  The 'loopback' PvD  . . . . . . . . . . . . . . . . . . .   5
+     3.2.  The 'loopback' PvD  . . . . . . . . . . . . . . . . . . .   4
      3.3.  The 'default' PvD . . . . . . . . . . . . . . . . . . . .   5
    4.  New API functions for learning about PvDs . . . . . . . . . .   5
    5.  New API functions for scoping functionality to a specific PvD   6
@@ -81,7 +84,7 @@ Table of Contents
    12. References  . . . . . . . . . . . . . . . . . . . . . . . . .  12
      12.1.  Normative References . . . . . . . . . . . . . . . . . .  12
      12.2.  Informative References . . . . . . . . . . . . . . . . .  12
-     12.3.  URIs . . . . . . . . . . . . . . . . . . . . . . . . . .  12
+     12.3.  URIs . . . . . . . . . . . . . . . . . . . . . . . . . .  13
    Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .  13
 
 1.  Introduction
@@ -89,8 +92,8 @@ Table of Contents
    RFC 7556 [RFC7556] provides the essential conceptual guidance an API
    designer would need to support use of PvDs.  This document aims to
    capture the requirements for an API that can be used by applications
-   that would be considered "advanced", according to section 6.3 [1] of
-   RFC 7556 [RFC7556].  The "basic" [2] and "intermediate" [3] API
+   that would be considered "advanced", according to section 6.3 [4] of
+   RFC 7556 [RFC7556].  The "basic" [5] and "intermediate" [6] API
    support levels can in principle be implemented by means of layers
    wrapping the advanced API.
 
@@ -106,17 +109,14 @@ Table of Contents
 
 
 
-
-
-
-Kline                    Expires April 30, 2016                 [Page 2]
+Kline                      Expires May 1, 2016                  [Page 2]
 
 Internet-Draft                  MPvD API                    October 2015
 
 
 2.  High level requirements
 
-   As described in section 2 [4] of RFC 7556 [RFC7556], a Provisioning
+   As described in section 2 [7] of RFC 7556 [RFC7556], a Provisioning
    Domain ("PvD") is a "consistent set of network configuration
    information."
 
@@ -125,16 +125,6 @@ Internet-Draft                  MPvD API                    October 2015
    servers and search path - HTTP proxy - yet to be specified: metering,
    medium, captive portal URL, ...  - not learned atomically - not
    static
-
-   For backward compatibility for non-PvD-aware applications, there MUST
-   exist a "default PvD", i.e. a PvD within which system functions
-   requiring a PvD are to be performed.
-
-   It is expected that most nodes will use a variety of information
-   coupled with administrative policy to promote one of a number of
-   currently active PvDs to be the default for ease of backward
-   compatibility, and to promote another active PvD in its place as
-   circumstances change.
 
    The rest of this document is concerned with: - identifying new system
    requirements - identifying some existing uses of implicit pvds that
@@ -162,14 +152,6 @@ Internet-Draft                  MPvD API                    October 2015
 
    R2  observe configuration elements of an accessible PvD
 
-
-
-
-Kline                    Expires April 30, 2016                 [Page 3]
-
-Internet-Draft                  MPvD API                    October 2015
-
-
        It MUST be possible to learn requested configuration information
        of any accessible PvD, and to be informed of any changes to the
        configuration information comprising an accessible PvD.
@@ -178,8 +160,16 @@ Internet-Draft                  MPvD API                    October 2015
 
        For every existing API function that interacts with the node's
        networking stack, be it at a relatively high level like
-       getaddrinfo() [5] or at the level of something like Sockets API's
+       getaddrinfo() [8] or at the level of something like Sockets API's
        sendmsg(), there MUST be a means by which an application can
+
+
+
+Kline                      Expires May 1, 2016                  [Page 3]
+
+Internet-Draft                  MPvD API                    October 2015
+
+
        specify the PvD within which networking operations are to be
        restricted.
 
@@ -218,14 +208,6 @@ Internet-Draft                  MPvD API                    October 2015
    there are no PvDs accessible to a user/group/application, either as a
    matter of policy (insufficient privileges) or as a matter of natural
    circumstance (the node is not connected to any network), the 'null'
-
-
-
-Kline                    Expires April 30, 2016                 [Page 4]
-
-Internet-Draft                  MPvD API                    October 2015
-
-
    PvD may be a suitable PvD for the API to return to application
    queries or to apply as the PvD of use in the absence of other
    explicitly reference PvDs.
@@ -235,6 +217,15 @@ Internet-Draft                  MPvD API                    October 2015
    - useful to scope networking functions to the node only - has only
    locally assigned addresses and routes specifying local delivery and
    no default routes - MAY have other configuration elements consisting
+
+
+
+
+Kline                      Expires May 1, 2016                  [Page 4]
+
+Internet-Draft                  MPvD API                    October 2015
+
+
    of locally accessible services - TODO: ask for help/clarification
    here
 
@@ -243,15 +234,26 @@ Internet-Draft                  MPvD API                    October 2015
    PvD-aware system as a whole SHOULD have a notion of currently active
    default PvD
 
-   - without this application behaviour will be highly system dependent
-   (does the system iterate through PvDs, in some order, trying to find
-   a PvD in which a certain op succeeds?) - this is the PvD to use for
-   operations for which a PvD must be selected and no explicity PvD API
-   has been used - as a matter of policy, this MAY be a "null" PvD,
-   effectively requiring all apps to be PvD-aware, or "loopback" to
-   permit locally communications only for non-PvD-aware apps - SHOULD be
-   a way to communicate changes in the default PvD - MUST be able to
-   specify that the default PvD is to be used
+   - makes "basic 6.1" trivial - without this application behaviour will
+   be highly system dependent (does the system iterate through PvDs, in
+   some order, trying to find a PvD in which a certain op succeeds?) -
+   this is the PvD to use for operations for which a PvD must be
+   selected and no explicity PvD API has been used - as a matter of
+   policy, this MAY be a "null" PvD, effectively requiring all apps to
+   be PvD-aware, or "loopback" to permit locally communications only for
+   non-PvD-aware apps - SHOULD be a way to communicate changes in the
+   default PvD - MUST be able to specify that the default PvD is to be
+   used
+
+   For backward compatibility for non-PvD-aware applications, there MUST
+   exist a "default PvD", i.e. a PvD within which system functions
+   requiring a PvD are to be performed.
+
+   It is expected that most nodes will use a variety of information
+   coupled with administrative policy to promote one of a number of
+   currently active PvDs to be the default for ease of backward
+   compatibility, and to promote another active PvD in its place as
+   circumstances change.
 
 4.  New API functions for learning about PvDs
 
@@ -272,16 +274,16 @@ Internet-Draft                  MPvD API                    October 2015
    reference).  This API MUST be extenible, as PvD information is not
    guaranteed to be learned atomically nor is it guaranteed to be
    static.  Furthermore, this API needs to be extensible in order to
-   accomodate requesting new configuration information not yet conceived
-   of at this time, e.g. a new FOO protocol is used within a given PvD
 
 
 
-Kline                    Expires April 30, 2016                 [Page 5]
+Kline                      Expires May 1, 2016                  [Page 5]
 
 Internet-Draft                  MPvD API                    October 2015
 
 
+   accomodate requesting new configuration information not yet conceived
+   of at this time, e.g. a new FOO protocol is used within a given PvD
    and it's important for applications to learn that they need to use
    the proxy BAR for best performance.
 
@@ -328,15 +330,16 @@ typedef unsigned int pvd_handle_t;
 //
 // Depending on the context it may indicate that the system does not
 // implement support for the Provisioning Domain API, an error, or
-// a signal to "clear" previous PVD index state.
-#define PVD_HANDLE_UNSPEC ((pvd_handle_t)0)
 
 
 
-Kline                    Expires April 30, 2016                 [Page 6]
+Kline                      Expires May 1, 2016                  [Page 6]
 
 Internet-Draft                  MPvD API                    October 2015
 
+
+// a signal to "clear" previous PVD index state.
+#define PVD_HANDLE_UNSPEC ((pvd_handle_t)0)
 
 // Retrieve the current "default" PVD.  If the return type is
 // PVD_HANDLE_INVALID there may be no PVD accessible to this process
@@ -383,17 +386,16 @@ int pvd_set_thread_default(pvd_handle_t);  // 0 or -1 && errno = EFOO
    interface was connected to a single PvD network, SHOULD be extended
    to be invoked with a PvD argument
 
-   In order to ease porting of non-PVD-aware applications as well as
-   support non-PVD-aware applications in accordance with the principle
 
 
 
-
-Kline                    Expires April 30, 2016                 [Page 7]
+Kline                      Expires May 1, 2016                  [Page 7]
 
 Internet-Draft                  MPvD API                    October 2015
 
 
+   In order to ease porting of non-PVD-aware applications as well as
+   support non-PVD-aware applications in accordance with the principle
    of least surprise it is recommended that the following functionality
    be added to existing system networking APIs.
 
@@ -440,16 +442,16 @@ Internet-Draft                  MPvD API                    October 2015
  * pvd_handle_t and the option_len is required to be sizeof(pvd_handle_t).
  *
  * Setting the SO_PVD_HANDLE option constrains all operations on the
- * specified socket to function only within the specified PVD currently
- * described by pvd_handle_t.  If the pvd_handle_t argument has the value
 
 
 
-Kline                    Expires April 30, 2016                 [Page 8]
+Kline                      Expires May 1, 2016                  [Page 8]
 
 Internet-Draft                  MPvD API                    October 2015
 
 
+ * specified socket to function only within the specified PVD currently
+ * described by pvd_handle_t.  If the pvd_handle_t argument has the value
  * PVD_HANDLE then the operating-system policy-defined default is
  * to be used (see <net/pvd.h>).
  */
@@ -497,15 +499,14 @@ Internet-Draft                  MPvD API                    October 2015
  * with similar accept()-style semantics.
  */
 
-/*
 
 
-
-Kline                    Expires April 30, 2016                 [Page 9]
+Kline                      Expires May 1, 2016                  [Page 9]
 
 Internet-Draft                  MPvD API                    October 2015
 
 
+/*
  * getaddrinfo w/ pvd_handle_t argument
  */
 
@@ -552,16 +553,17 @@ Internet-Draft                  MPvD API                    October 2015
        new secondary DNS server has replaced the previous secondary, et
        cetera.
 
-   R9  For every element of system functionality that has historically
-       been performed in the context of a single, implicit PvD an API
 
 
 
-Kline                    Expires April 30, 2016                [Page 10]
+
+Kline                      Expires May 1, 2016                 [Page 10]
 
 Internet-Draft                  MPvD API                    October 2015
 
 
+   R9  For every element of system functionality that has historically
+       been performed in the context of a single, implicit PvD an API
        extension MUST exist allowing the application to specificy that
        the same functionality be performed within the scope of an
        explicitly requested PvD (via identifier or handle).
@@ -608,16 +610,16 @@ Internet-Draft                  MPvD API                    October 2015
    bridging data path between two PvDs that would not have otherwise
    been directly connected.
 
-   For some operating systems, existing APIs already make this bridging
-   possible, though some functionality like DNS resolution may have been
 
 
 
-Kline                    Expires April 30, 2016                [Page 11]
+Kline                      Expires May 1, 2016                 [Page 11]
 
 Internet-Draft                  MPvD API                    October 2015
 
 
+   For some operating systems, existing APIs already make this bridging
+   possible, though some functionality like DNS resolution may have been
    difficult to implement.  Indeed, the very aim of an MPvD API is to
    make implementing a PvD-aware application simple and to make its
    functioning more "correct" ("first class" support for such
@@ -660,19 +662,23 @@ Internet-Draft                  MPvD API                    October 2015
               Multiple-Interface Hosts", RFC 6419, DOI 10.17487/RFC6419,
               November 2011, <http://www.rfc-editor.org/info/rfc6419>.
 
+
+
+
+
+
+
+
+Kline                      Expires May 1, 2016                 [Page 12]
+
+Internet-Draft                  MPvD API                    October 2015
+
+
 12.3.  URIs
 
    [1] https://tools.ietf.org/html/rfc7556#section-6.3
 
    [2] https://tools.ietf.org/html/rfc7556#section-6.1
-
-
-
-
-Kline                    Expires April 30, 2016                [Page 12]
-
-Internet-Draft                  MPvD API                    October 2015
-
 
    [3] https://tools.ietf.org/html/rfc7556#section-6.2
 
@@ -719,10 +725,4 @@ Author's Address
 
 
 
-
-
-
-
-
-
-Kline                    Expires April 30, 2016                [Page 13]
+Kline                      Expires May 1, 2016                 [Page 13]
