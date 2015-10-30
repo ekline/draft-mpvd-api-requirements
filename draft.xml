@@ -7,6 +7,7 @@
      An alternate method (rfc include) is described in the references. -->
 
 <!ENTITY RFC1122 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.1122.xml">
+<!ENTITY RFC1918 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.1918.xml">
 <!ENTITY RFC2119 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml">
 <!ENTITY RFC3493 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.3493.xml">
 <!ENTITY RFC3879 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.3879.xml">
@@ -261,7 +262,7 @@ currently scoped PvD be used a candidate set. (See <xref target="RFC6418">RFC
 address selection.)
           </t>
           <t>
-Therefore, for nodes following the PvD-aware End System Model,
+For nodes following the PvD-aware End System Model,
 <xref target="RFC6724">RFC 6724</xref>
 <eref target="https://tools.ietf.org/html/rfc6724#section-4">section 4</eref>
 is amended as follows:
@@ -289,11 +290,11 @@ cheaply cannot function correctly otherwise.
 <xref target="RFC6418">RFC 6418</xref>
 <eref target="https://tools.ietf.org/html/rfc6418#section-4.2"
   >section 4.2</eref> contains more discussion and references to issues
-arising from insufficiently isolated routing tables.
+arising from insufficiently isolated routing information.
           </t>
 
           <t>
-Therefore, for nodes following the PvD-aware End System Model:
+For nodes following the PvD-aware End System Model:
             <list counter="reqs" hangIndent="4" style="format R%d">
               <t>
 The set of routes consulted for any routing decision MUST be restricted to the
@@ -303,17 +304,38 @@ routes associated with the (explicitly or implicitly) specified PvD.
           </t>
         </section>
 
-        <section title="Additional system and library support">
+        <section title="Automatic PvD metadata marking">
           <t>
-- getaddrinfo() and AI_ADDRCONFIG
-    - RFC3493#section-6.1 "...shall be returned only if an IPv4/v6 address is configured on the local system..." -> "... within the requested PvD"
+In many cases, an application can examine a source address or the
+destination address of a received datagram and use that address's association
+with a given PvD to learn, for example, the PvD with which an incoming
+connection may be associated. It may, however, be impossible for an application
+to make this determination on its own if, for example, an incoming TCP
+connection is destined to a <xref target="RFC1918">RFC 1918</xref> address
+that happens to be configured in multiple PvDs at the same time. In such
+circumstances, the supporting operating system will need to provide additional
+assistance.
           </t>
           <t>
-For operating systems that implement PvD support
-system-side PvD tagging
-    - actions peformed by the system must set PvD scope automatically, even for non-PvD apps:
-        - TCP accept()
-        - incoming datagrams to a UDP server
+For nodes following the PvD-aware End System Model:
+            <list counter="reqs" hangIndent="4" style="format R%d">
+              <t>
+For networking functionality performed on behalf of an application, the
+supporting operating system MUST record and make available to the
+application either (1) all the information the application might need to make
+a PvD determination on its own or (2) the PvD itself directly. A supporting
+operating system SHOULD record and make available the PvD directly.
+              </t>
+            </list>
+          </t>
+        </section>
+
+        <section title="Additional system and library support">
+          <t>
+Frequently, operating systems have several additional supporting libraries and
+services for more advance networking functionality. Using the system's own
+PvD API, meeting the above requirements, it should be possible to extend them
+to provide correct per-PvD isolation of information and application support.
           </t>
         </section>
       </section>
@@ -563,6 +585,19 @@ sendmsg() / recvmsg() cmsg semantics
 </artwork>
 </figure>
       </t>
+          <t>
+For nodes following the PvD-aware End System Model:
+            <list counter="reqs" hangIndent="4" style="format R%d">
+              <t>
+Implementations of <xref target="RFC3493">RFC 3493</xref>
+<eref target="https://tools.ietf.org/html/rfc3493#section-6.1"
+  >section 6.1</eref> getaddrinfo()
+
+- getaddrinfo() and AI_ADDRCONFIG
+    - RFC3493#section-6.1 "...shall be returned only if an IPv4/v6 address is configured on the local system..." -> "... within the requested PvD"
+              </t>
+            </list>
+          </t>
 
     </section>
 
@@ -590,11 +625,6 @@ Routes and prefixes can come and go and yet all be part of the same provisioning
     attaches because: awesome explanation goes here.
 
 System requirements
-Systems which support PVD API calls should set the PVD_HANDLE on incoming packets so that applications
-can automatically do the right thing.
-
-what to do with process and thread default values on fork/exec
-
 
 A PVD-aware API MUST make it possible for an application to perform
 normal name resolution constrained to the name resolution configuration
@@ -788,11 +818,13 @@ use of more than one PvD (or the MPvD API itself) MAY be similarly restricted.
     <references title="Normative References">
       &RFC1122;
       &RFC2119;
+      &RFC3493;
       &RFC6724;
       &RFC7556;
     </references>
 
     <references title="Informative References">
+      &RFC1918;
       &RFC3879;
       &RFC4191;
       &RFC6418;

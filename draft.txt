@@ -70,25 +70,26 @@ Table of Contents
      2.2.  Requirements for supporting operating systems . . . . . .   4
        2.2.1.  Source address selection  . . . . . . . . . . . . . .   5
        2.2.2.  Route isolation . . . . . . . . . . . . . . . . . . .   5
-       2.2.3.  Additional system and library support . . . . . . . .   6
+       2.2.3.  Automatic PvD metadata marking  . . . . . . . . . . .   6
+       2.2.4.  Additional system and library support . . . . . . . .   6
    3.  Requirements for new API functionality for learning about
        PvDs  . . . . . . . . . . . . . . . . . . . . . . . . . . . .   6
-   4.  New API functions for scoping functionality to a specific PvD   6
+   4.  New API functions for scoping functionality to a specific PvD   7
    5.  Updated API functions for scoping functionality to a specific
        PvD . . . . . . . . . . . . . . . . . . . . . . . . . . . . .   8
-   6.  TL;DR . . . . . . . . . . . . . . . . . . . . . . . . . . . .  10
-   7.  Requirements for new API functionality  . . . . . . . . . . .  11
+   6.  TL;DR . . . . . . . . . . . . . . . . . . . . . . . . . . . .  11
+   7.  Requirements for new API functionality  . . . . . . . . . . .  12
    8.  Conceptual PvDs . . . . . . . . . . . . . . . . . . . . . . .  12
      8.1.  The 'null' PvD  . . . . . . . . . . . . . . . . . . . . .  12
      8.2.  The 'loopback' PvD  . . . . . . . . . . . . . . . . . . .  12
-     8.3.  The 'default' PvD . . . . . . . . . . . . . . . . . . . .  12
+     8.3.  The 'default' PvD . . . . . . . . . . . . . . . . . . . .  13
    9.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  13
    10. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  13
    11. Security Considerations . . . . . . . . . . . . . . . . . . .  13
-   12. References  . . . . . . . . . . . . . . . . . . . . . . . . .  13
-     12.1.  Normative References . . . . . . . . . . . . . . . . . .  13
-     12.2.  Informative References . . . . . . . . . . . . . . . . .  14
-   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .  14
+   12. References  . . . . . . . . . . . . . . . . . . . . . . . . .  14
+     12.1.  Normative References . . . . . . . . . . . . . . . . . .  14
+     12.2.  Informative References . . . . . . . . . . . . . . . . .  15
+   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .  15
 
 1.  Introduction
 
@@ -104,7 +105,6 @@ Table of Contents
    requirements more concrete by discussion and example.
 
 1.1.  Requirements Language
-
 
 
 
@@ -245,8 +245,8 @@ Internet-Draft                  MPvD API                    October 2015
    set.  (See RFC 6418 [RFC6418] section 3.5 [13] for references to
    issues arising from poor source address selection.)
 
-   Therefore, for nodes following the PvD-aware End System Model, RFC
-   6724 [RFC6724] section 4 [14] is amended as follows:
+   For nodes following the PvD-aware End System Model, RFC 6724
+   [RFC6724] section 4 [14] is amended as follows:
 
    R4  The candidate source addresses MUST be restricted to the set of
        unicast addresses associated with the (explicitly or implicitly)
@@ -266,9 +266,9 @@ Internet-Draft                  MPvD API                    October 2015
    UDP socket to learn reachability information cheaply cannot function
    correctly otherwise.  RFC 6418 [RFC6418] section 4.2 [15] contains
    more discussion and references to issues arising from insufficiently
-   isolated routing tables.
+   isolated routing information.
 
-   Therefore, for nodes following the PvD-aware End System Model:
+   For nodes following the PvD-aware End System Model:
 
    R6  The set of routes consulted for any routing decision MUST be
        restricted to the routes associated with the (explicitly or
@@ -282,16 +282,34 @@ Kline                     Expires May 02, 2016                  [Page 5]
 Internet-Draft                  MPvD API                    October 2015
 
 
-2.2.3.  Additional system and library support
+2.2.3.  Automatic PvD metadata marking
 
-   - getaddrinfo() and AI_ADDRCONFIG - RFC3493#section-6.1 "...shall be
-   returned only if an IPv4/v6 address is configured on the local
-   system..." -> "... within the requested PvD"
+   In many cases, an application can examine a source address or the
+   destination address of a received datagram and use that address's
+   association with a given PvD to learn, for example, the PvD with
+   which an incoming connection may be associated.  It may, however, be
+   impossible for an application to make this determination on its own
+   if, for example, an incoming TCP connection is destined to a RFC 1918
+   [RFC1918] address that happens to be configured in multiple PvDs at
+   the same time.  In such circumstances, the supporting operating
+   system will need to provide additional assistance.
 
-   For operating systems that implement PvD support system-side PvD
-   tagging - actions peformed by the system must set PvD scope
-   automatically, even for non-PvD apps: - TCP accept() - incoming
-   datagrams to a UDP server
+   For nodes following the PvD-aware End System Model:
+
+   R7  For networking functionality performed on behalf of an
+       application, the supporting operating system MUST record and make
+       available to the application either (1) all the information the
+       application might need to make a PvD determination on its own or
+       (2) the PvD itself directly.  A supporting operating system
+       SHOULD record and make available the PvD directly.
+
+2.2.4.  Additional system and library support
+
+   Frequently, operating systems have several additional supporting
+   libraries and services for more advance networking functionality.
+   Using the system's own PvD API, meeting the above requirements, it
+   should be possible to extend them to provide correct per-PvD
+   isolation of information and application support.
 
 3.  Requirements for new API functionality for learning about PvDs
 
@@ -312,6 +330,14 @@ Internet-Draft                  MPvD API                    October 2015
    reference).  This API MUST be extenible, as PvD information is not
    guaranteed to be learned atomically nor is it guaranteed to be
    static.  Furthermore, this API needs to be extensible in order to
+
+
+
+Kline                     Expires May 02, 2016                  [Page 6]
+
+Internet-Draft                  MPvD API                    October 2015
+
+
    accomodate requesting new configuration information not yet conceived
    of at this time, e.g. a new FOO protocol is used within a given PvD
    and it's important for applications to learn that they need to use
@@ -330,12 +356,6 @@ Internet-Draft                  MPvD API                    October 2015
    application control (e.g. process groups)
 
 
-
-
-
-Kline                     Expires May 02, 2016                  [Page 6]
-
-Internet-Draft                  MPvD API                    October 2015
 
 
    // Not guaranteed to be stable across across associations to a PVD.
@@ -366,6 +386,14 @@ Internet-Draft                  MPvD API                    October 2015
    //
    // Depending on the context it may indicate that the system does not
    // implement support for the Provisioning Domain API, an error, or
+
+
+
+Kline                     Expires May 02, 2016                  [Page 7]
+
+Internet-Draft                  MPvD API                    October 2015
+
+
    // a signal to "clear" previous PVD index state.
    #define PVD_HANDLE_UNSPEC ((pvd_handle_t)0)
 
@@ -386,13 +414,6 @@ Internet-Draft                  MPvD API                    October 2015
    // thread-specific default has been set this MUST return the value
    // of a call to pvd_current_process_default().
    pvd_handle_t pvd_thread_default();
-
-
-
-Kline                     Expires May 02, 2016                  [Page 7]
-
-Internet-Draft                  MPvD API                    October 2015
-
 
    int pvd_set_process_default(pvd_handle_t);  // 0 or -1 && errno = EFOO
    int pvd_set_thread_default(pvd_handle_t);  // 0 or -1 && errno = EFOO
@@ -421,6 +442,14 @@ Internet-Draft                  MPvD API                    October 2015
    interface was connected to a single PvD network, SHOULD be extended
    to be invoked with a PvD argument
 
+
+
+
+Kline                     Expires May 02, 2016                  [Page 8]
+
+Internet-Draft                  MPvD API                    October 2015
+
+
    In order to ease porting of non-PVD-aware applications as well as
    support non-PVD-aware applications in accordance with the principle
    of least surprise it is recommended that the following functionality
@@ -442,14 +471,6 @@ Internet-Draft                  MPvD API                    October 2015
    unspecified, it is RECOMMENDED source address selection be restricted
    to this PVD - else if a PvD is specified and address is not
    unspecified, EADDRNOTAVAIL might be returned - else best effort /
-
-
-
-Kline                     Expires May 02, 2016                  [Page 8]
-
-Internet-Draft                  MPvD API                    October 2015
-
-
    system-specific policies apply - listen() - if the file descriptor is
    already bound to a PvD, only traffic to one of the PvD's addresses
    should cause the file descriptor to become readable - other traffic
@@ -477,6 +498,14 @@ Internet-Draft                  MPvD API                    October 2015
     * specified socket to function only within the specified PVD currently
     * described by pvd_handle_t.  If the pvd_handle_t argument has the value
     * PVD_HANDLE then the operating-system policy-defined default is
+
+
+
+Kline                     Expires May 02, 2016                  [Page 9]
+
+Internet-Draft                  MPvD API                    October 2015
+
+
     * to be used (see <net/pvd.h>).
     */
    #define SO_PVD_HANDLE  some_implementation_specific_value
@@ -498,14 +527,6 @@ Internet-Draft                  MPvD API                    October 2015
     * the system is unable to determine which PVD should be associated with
     * the source of the message.  In such cases, the value returned in the
     * cmsg_data field MAY be PVD_HANDLE. This is not an error, but
-
-
-
-Kline                     Expires May 02, 2016                  [Page 9]
-
-Internet-Draft                  MPvD API                    October 2015
-
-
     * rather an underspecified situation.
     */
 
@@ -533,27 +554,6 @@ Internet-Draft                  MPvD API                    October 2015
 
    /*
     * getaddrinfo w/ pvd_handle_t argument
-    */
-
-   /*
-    * getnameinfo w/ pvd_handle_t argument
-    */
-
-
-
-6.  TL;DR
-
-   R7  An API call MUST exist whereby an application can learn the
-       identifiers, or short handles, of all PvDs active on the system
-       at the time.
-
-   R8  An MPvD API implementation MUST include a mechanism whereby an
-       application can learn of/be notified of: the arrival of new PvDs
-       or the anticipated removal of a PvD.  Actual removal of a PvD can
-       be learned by observing any blocking PvD API operation for errors
-       indicating the loss of the PvD (e.g. a socket read() returning
-       ENONET).
-
 
 
 
@@ -562,7 +562,36 @@ Kline                     Expires May 02, 2016                 [Page 10]
 Internet-Draft                  MPvD API                    October 2015
 
 
-   R9  API implementations that use short handles to reference PvD
+    */
+
+   /*
+    * getnameinfo w/ pvd_handle_t argument
+    */
+
+
+
+   For nodes following the PvD-aware End System Model:
+
+   R8  Implementations of RFC 3493 [RFC3493] section 6.1 [16]
+       getaddrinfo() - getaddrinfo() and AI_ADDRCONFIG -
+       RFC3493#section-6.1 "...shall be returned only if an IPv4/v6
+       address is configured on the local system..." -> "... within the
+       requested PvD"
+
+6.  TL;DR
+
+   R9  An API call MUST exist whereby an application can learn the
+       identifiers, or short handles, of all PvDs active on the system
+       at the time.
+
+   R10 An MPvD API implementation MUST include a mechanism whereby an
+       application can learn of/be notified of: the arrival of new PvDs
+       or the anticipated removal of a PvD.  Actual removal of a PvD can
+       be learned by observing any blocking PvD API operation for errors
+       indicating the loss of the PvD (e.g. a socket read() returning
+       ENONET).
+
+   R11 API implementations that use short handles to reference PvD
        information (identifiers, configuration information) SHOULD
        consider varying the handle used for a specific PvD with each
        separate attach, e.g. a 3GPP connection to "apn.carrier.example"
@@ -576,17 +605,26 @@ Internet-Draft                  MPvD API                    October 2015
        configuration information from one attachment instance to
        another.
 
-   R10 There MUST be an API call which, when passed a PvD identifier or
+   R12 There MUST be an API call which, when passed a PvD identifier or
        short handle, returns elements of configuration information
        specific to that PvD.
 
-   R11 An MPvD API implementation MUST include a mechanism whereby an
+
+
+
+
+Kline                     Expires May 02, 2016                 [Page 11]
+
+Internet-Draft                  MPvD API                    October 2015
+
+
+   R13 An MPvD API implementation MUST include a mechanism whereby an
        application can learn of changes to the configuration information
        of a given PvD, e.g. a new temporary address has been formed, a
        new secondary DNS server has replaced the previous secondary, et
        cetera.
 
-   R12 For every element of system functionality that has historically
+   R14 For every element of system functionality that has historically
        been performed in the context of a single, implicit PvD an API
        extension MUST exist allowing the application to specificy that
        the same functionality be performed within the scope of an
@@ -610,14 +648,6 @@ Internet-Draft                  MPvD API                    October 2015
    An MPvD API implementation SHOULD consider implementing policy
    controls
 
-
-
-
-Kline                     Expires May 02, 2016                 [Page 11]
-
-Internet-Draft                  MPvD API                    October 2015
-
-
 8.  Conceptual PvDs
 
    TBD: 'PVD_ANY'
@@ -636,6 +666,14 @@ Internet-Draft                  MPvD API                    October 2015
 
    - useful to scope networking functions to the node only - has only
    locally assigned addresses and routes specifying local delivery and
+
+
+
+Kline                     Expires May 02, 2016                 [Page 12]
+
+Internet-Draft                  MPvD API                    October 2015
+
+
    no default routes - MAY have other configuration elements consisting
    of locally accessible services - TODO: ask for help/clarification
    here
@@ -666,14 +704,6 @@ Internet-Draft                  MPvD API                    October 2015
    compatibility, and to promote another active PvD in its place as
    circumstances change.
 
-
-
-
-Kline                     Expires May 02, 2016                 [Page 12]
-
-Internet-Draft                  MPvD API                    October 2015
-
-
 9.  Acknowledgements
 
    The core concepts presented in this document were developed during
@@ -690,6 +720,15 @@ Internet-Draft                  MPvD API                    October 2015
 
    Consider whether 7556 section 8 should be referenced.  Possibly not,
    since those seem to be focused on external PvD-altering threats.
+
+
+
+
+
+Kline                     Expires May 02, 2016                 [Page 13]
+
+Internet-Draft                  MPvD API                    October 2015
+
 
    The major new security impact of an MPvD API is that it becomes much
    simpler (by design) to write a functional application to create a
@@ -722,16 +761,13 @@ Internet-Draft                  MPvD API                    October 2015
               RFC1122, October 1989,
               <http://www.rfc-editor.org/info/rfc1122>.
 
-
-
-
-Kline                     Expires May 02, 2016                 [Page 13]
-
-Internet-Draft                  MPvD API                    October 2015
-
-
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119, March 1997.
+
+   [RFC3493]  Gilligan, R., Thomson, S., Bound, J., McCann, J., and W.
+              Stevens, "Basic Socket Interface Extensions for IPv6", RFC
+              3493, DOI 10.17487/RFC3493, February 2003,
+              <http://www.rfc-editor.org/info/rfc3493>.
 
    [RFC6724]  Thaler, D., Ed., Draves, R., Matsumoto, A., and T. Chown,
               "Default Address Selection for Internet Protocol Version 6
@@ -742,7 +778,19 @@ Internet-Draft                  MPvD API                    October 2015
               Architecture", RFC 7556, DOI 10.17487/RFC7556, June 2015,
               <http://www.rfc-editor.org/info/rfc7556>.
 
+
+
+
+Kline                     Expires May 02, 2016                 [Page 14]
+
+Internet-Draft                  MPvD API                    October 2015
+
+
 12.2.  Informative References
+
+   [RFC1918]  Rekhter, Y., Moskowitz, R., Karrenberg, D., Groot, G., and
+              E. Lear, "Address Allocation for Private Internets", BCP
+              5, RFC 1918, February 1996.
 
    [RFC3879]  Huitema, C. and B. Carpenter, "Deprecating Site Local
               Addresses", RFC 3879, DOI 10.17487/RFC3879, September
@@ -781,4 +829,12 @@ Author's Address
 
 
 
-Kline                     Expires May 02, 2016                 [Page 14]
+
+
+
+
+
+
+
+
+Kline                     Expires May 02, 2016                 [Page 15]
