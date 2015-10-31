@@ -13,7 +13,6 @@
 <!ENTITY RFC3879 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.3879.xml">
 <!ENTITY RFC4191 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4191.xml">
 <!ENTITY RFC6418 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6418.xml">
-<!ENTITY RFC6419 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6419.xml">
 <!ENTITY RFC6724 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6724.xml">
 <!ENTITY RFC7556 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.7556.xml">
 ]>
@@ -44,7 +43,7 @@
 <!-- end of list of popular I-D processing instructions -->
 <rfc category="info"
      ipr="trust200902"
-     docName="draft-kline-mif-pvdapireqs-00">
+     docName="draft-kline-mif-mpvd-api-reqs-00">
 
   <!-- category values: std, bcp, info, exp, and historic
      ipr values: full3667, noModification3667, noDerivatives3667
@@ -200,6 +199,16 @@ stack, be it at a relatively high level like
 sendmsg(), there MUST be a means by which an application can specify the
 PvD within which networking operations are to be restricted. 
             </t>
+            <t>
+consistent use of programmatic references to PvDs
+<vspace blankLines="1"/>
+For uniformity and simplicity, every PvD-aware API functional element
+SHOULD use (as return values of function calls, function arguments, et cetera)
+the same programmatic reference for PvDs, e.g. a construct containing a
+<eref target="https://tools.ietf.org/html/draft-ietf-mif-mpvd-id"
+  >PvD identifier</eref> or some equivalent shorthand reference token
+(see <xref target="tokens"/> for a discussion of implementation considerations).
+            </t>
           </list>
 It is import to note that there is always a provisioning domain within which
 networking functionality is scoped. For simply-connected hosts this may be the
@@ -326,13 +335,12 @@ For nodes following the PvD-aware End System Model:
 For networking functionality performed on behalf of an application, the
 supporting operating system MUST record and make available to the
 application either (1) all the information the application might need to make
-a PvD evaluation on its own or (2) the PvD identifier (or an equivalent
-shorthand reference thereto, whichever is most useful within the context of
-the API) directly.
+a PvD evaluation on its own or (2) the API's PvD programmatic reference
+directly.
 <vspace blankLines="1"/>
 A supporting operating system SHOULD record and make
-available the PvD identifier (or an equivalent reference); other approaches
-invite ambiguity among applications' interpretation of available information.
+available the API's PvD programmatic reference; other approaches invite
+ambiguity among applications' interpretation of available information.
               </t>
             </list>
           </t>
@@ -349,8 +357,8 @@ to provide correct per-PvD isolation of information and application support.
       </section>
     </section>
 
-    <section anchor="concept_pvds" title="Conceptual PvDs">
-      <section anchor="null_pvd" title="The 'null' PvD">
+    <section anchor="concept_pvds" title="XXX Conceptual PvDs">
+      <section anchor="null_pvd" title="XXX The 'null' PvD">
         <t>
 Useful to ensure networking functions fail (and fail quickly)
 If there are no PvDs accessible to a user/group/application, either as a
@@ -360,7 +368,7 @@ be a suitable PvD for the API to return to application queries or to apply as
 the PvD of use in the absence of other explicitly reference PvDs.
         </t>
       </section>
-      <section anchor="loopback_pvd" title="The 'loopback' PvD">
+      <section anchor="loopback_pvd" title="XXX The 'loopback' PvD">
         <t>
     - useful to scope networking functions to the node only
     - has only locally assigned addresses and routes specifying local delivery and no default routes
@@ -368,7 +376,7 @@ the PvD of use in the absence of other explicitly reference PvDs.
     - TODO: ask for help/clarification here
         </t>
       </section>
-      <section anchor="default_pvd" title="The 'default' PvD">
+      <section anchor="default_pvd" title="XXX The 'default' PvD">
         <t>
 PvD-aware system as a whole SHOULD have a notion of currently active default PvD
         </t>
@@ -392,120 +400,135 @@ promote another active PvD in its place as circumstances change.
     </section>
 
     <section title="Requirements for new API functionality">
-      <t></t>
-      <section title="learning about PvDs">
+      <section title="Learning of PvD availability">
         <t>
-This data generally does not become available to a node in an atomic fashion, and can change over time
-(RAs with 6106 that add or replace DNS servers in previous RAs, ...).
-
-Routes and prefixes can come and go and yet all be part of the same provisioning domain.
-
-An API call MUST exist whereby an application can learn the identifiers, or short handles, of all PvDs active on the system at the time.
-- MUST existence (subject to policy)
-    - both implicit and explicit PvDs must also be included in the API response
-- updates to availability
-    - SHOULD new
-    - MAY going away (useful)
-    - MAY gone (app may also learn via errors)
-The same PvD may arrive on another interface (3GPP interface and WLAN -- find 3gpp spec reference).
-An MPvD API implementation MUST include a mechanism whereby an application can learn of/be notified of: the arrival of new PvDs or the anticipated removal of a PvD.
-Actual removal of a PvD can be learned by observing any blocking PvD API operation for errors indicating the loss of the PvD (e.g. a socket read() returning ENONET).
+          <list counter="reqs" hangIndent="4" style="format R%d">
+            <t>
+A PvD-aware API MUST implement a mechanism whereby an application can receive
+a set of the API's PvD programmatic references representing the complete set of
+PvDs (both
+<eref target="https://tools.ietf.org/html/rfc7556#section-2.1"> explicit</eref>
+and
+<eref target="https://tools.ietf.org/html/rfc7556#section-2.2"> implicit</eref>)
+with which the node is currently associated.
+            </t>
+            <t>
+A PvD-aware API implementation SHOULD contain a mechanism enabling an
+application to be notified of changes in the above set of actively associated
+PvDs in a comparatively efficient manner (i.e. more efficient than polling).
+            </t>
+          </list>
         </t>
       </section>
 
-      <section title="learning information within a PvD">
-        <t>
-- configuration
-    - SHOULD be an API to get configuration information for a specific PvD
-    - SHOULD configuration changes (app may also learn via errors)
-    - such an API MUST be easily extensible to support configuration information not yet considered
-Reason to be extensible:
-    - methods to get attributes of a PVD, like whether it
-      is comprised of a mobile link versus wifi/ethernet, whether there
-      is some metering/charging associated with traffic sent/received via
-      this PVD or not, etc.
-This API MUST be extensible, as PvD information is not guaranteed to be learned atomically nor is it guaranteed to be static. Furthermore, this API needs to
-be extensible in order to accommodate requesting new configuration information not yet conceived of at this time, e.g. a new FOO protocol is used within a given PvD and
-it's important for applications to learn that they need to use the proxy BAR for best performance.
+      <section
+          title="Learning network configuration information comprising a PvD">
 
-- get PvD configuration data
-    - notification of configuration changes
-    - figure out how to express PvD : interface/scope_id relationship
+        <t>
+          <list counter="reqs" hangIndent="4" style="format R%d">
+            <t>
+A PvD-aware API MUST include a mechanism whereby by an application, using the
+API's PvD programmatic reference, can receive elements of the network
+configuration information that comprise a PvD.
+At a minimum, this mechanism MUST be capable of answering queries for:
+<list style="symbols">
+<t>the PvD identifier</t>
+<t>all participating interfaces</t>
+<t>all IPv4 and all non-deprecated IPv6 addresses</t>
+<t>all configured DNS nameservers</t>
+</list>
+            </t>
+          </list>
+        </t>
+
+        <t>
+A PvD's network configuration information is neither guaranteed to be learned
+atomically nor is it guaranteed to be static. Addresses, routes, and even
+DNS nameservers and participating interfaces may each change over the lifetime
+of the node's association to a given PvD. Timely notification of such changes
+may be of particular importance to some applications.
+          <list counter="reqs" hangIndent="4" style="format R%d">
+            <t>
+A PvD-aware API implementation SHOULD contain a mechanism enabling an
+application to be notified of changes in the networking configuration
+information comprising a PvD in a comparatively efficient manner
+(i.e. more efficient than polling).
+            </t>
+          </list>
+        </t>
+
+        <t>
+          <list counter="reqs" hangIndent="4" style="format R%d">
+            <t>
+A network configuration query API implementation SHOULD take extensibility
+into account, to support querying for configuration information not yet
+conceived of with minimal adverse impact to applications.
+            </t>
+          </list>
         </t>
       </section>
 
-      <section title="scoping functionality to a specific PvD">
+      <section title="XXX Scoping functionality to a specific PvD">
         <t>
-API implementors SHOULD provide a mechanism for an application to set its default PvD, i.e. the PvD to be used by API calls made without reference to an explicit PvD.
-API implementors SHOULD provide a mechanism for an application to set its default PvD at the granularity of "programming parallelization": per-process, per-thread, per-fiber, et cetera.
+          <list counter="reqs" hangIndent="4" style="format R%d">
+            <t>
+A PvD-aware API implementation MUST include a mechanism for an application
+to specify the PvD programmatic reference of the PvD to which all
+networking functionality MUST be restricted when not otherwise explicitly
+specified (an application-specific "default PvD").
+            </t>
+            <t>
+The API implementation MUST support setting such a "default PvD" for an
+application's entire process (and by extension its child processes).
+Additionally, the API SHOULD support an application setting a "default PvD"
+at every granularity of "programming parallelization", i.e. not only
+per-process, but also per-thread, per-fiber, et cetera.
+            </t>
+            <t>
+For every degree of granularity at which an application may specify a
+"default PvD" there MUST exist a corresponding mechanism to retrieve the
+currently specified implementation-specific PvD programmatic reference.
+            </t>
+          </list>
+        </t>
 
-    - PvD-aware applications need to be able to specify that some functionality should be scoped to an implicit PvD
-- apps SHOULD be able to specify which PvD is to be used for network-related functionality at the granularity of programming parallelism:
-    - per-process (and child processes)
-    - per-thread
-    - per-fiber
+        <t>
+XXX
     - useful for being able to start non-PvD-aware apps within a single PvD context unbeknownst to them and operate correctly
-        - indeed, this could be used as a definition / validation that a PvD implemention is correct: non-PvD-aware apps function correctly, with no negative impact, in a single PvD without being PvD-aware
-- also per application control (e.g. process groups)
-// Retrieve the current "default" PVD.  If the return type is
-// PVD_HANDLE_INVALID there may be no PVD accessible to this process
-// at this time or no system support for this API.
-//
-// These values are used by PVD-aware function calls when a PVD index
-// is not explicitly specified.
-pvd_handle_t pvd_system_default();
-
-// Same as above, but operates at a per-process level.  If no
-// process-specific default has been set this MUST return the value
-// of a call to pvd_current_system_default().
-pvd_handle_t pvd_process_default();
-
-// Same as above, but operates at a per-thread level.  If no
-// thread-specific default has been set this MUST return the value
-// of a call to pvd_current_process_default().
-pvd_handle_t pvd_thread_default();
-
-int pvd_set_process_default(pvd_handle_t);
-int pvd_set_thread_default(pvd_handle_t);
-
-// Any function that is not easily extended to support a pvd_handle_t
-// argument, but for which the underlying operating system understands
-// the process-global or per-thread pvd_index can be wrapped to create
-// a PVD-aware variant like so:
-//
-// return_type pvd_functioname(pvd_handle_t pvdix, regular arguments...) {
-//     pvd_handle_t saved = pvd_thread_default();
-//     if (pvd_set_thread_default(pvdix) != 0) {
-//         // handle error
-//         return error_indicator_value;
-//     }
-//     return_type result = functionname(regular arguments...);
-//     pvd_set_thread_default(saved);  // Should error-check
-//     return result;
-// }
-
+        - indeed, this could be used as a definition / validation that a PvD implementation is correct: non-PvD-aware apps function correctly, with no negative impact, in a single PvD without being PvD-aware
         </t>
       </section>
 
-      <section anchor="policy" title="Policy restrictions">
-        <t>
-An MPvD API implementation MAY implement policy controls whereby access
-to PvD availability, configuration information, and explicit scoping requests
-are variously permitted or denied to certain applications.
-        </t>
-      </section>
-
-      <section anchor="exp_vs_imp" title="Explicit versus Implicit PvDs">
+      <section anchor="exp_vs_imp" title="XXX Explicit versus Implicit PvDs">
         <t>
 - the API used by PvD-aware applications MUST support both implicit and explicit PvDs
 - It SHOULD NOT be necessary for a PvD-aware application to distinguish between explicit and implicit PvDs.  Both SHOULD be equally accessible and useful via the same API calls.
 - PvD-aware nodes should provide PvD identifiers for implicit PvDs that can be used without application change in the same ways as explicit PvDs
         </t>
+<t>
+For every element of system functionality that has historically been performed in the context of a single, implicit PvD an API extension MUST exist allowing the application to specificy that the same functionality be
+performed within the scope of an explicitly requested PvD (via identifier or handle).
+</t>
       </section>
 
-      <section title="Use of PvD identifiers versus shorthand references">
+      <section anchor="policy" title="Policy restrictions">
         <t>
-shorthand reference, "handle", "token"
+This document does not make recommendations about policies governing the use
+of any or all elements of a PvD API, save only to note that some restrictions
+on use may be deemed necessary or appropriate.
+          <list counter="reqs" hangIndent="4" style="format R%d">
+            <t>
+A PvD API implementation MAY implement policy controls whereby access to
+PvD availability information, configuration elements, and/or explicit scoping
+requests is variously permitted or denied to certain applications.
+            </t>
+          </list>
+        </t>
+      </section>
+
+      <section anchor="tokens"
+               title="XXX PvD Programmatic reference implementation considerations">
+        <t>
   - node-specific token used to identify an instance of a single provisioning domain's configuration data
 
 // Not guaranteed to be stable across across associations to a PVD.
@@ -537,16 +560,29 @@ shorthand reference, "handle", "token"
 // implement support for the Provisioning Domain API, an error, or
 // a signal to "clear" previous PVD index state.
 
+  - a given provisioning domain MUST NOT be assumed to have the same handle across attaches
+
+  - implementations SHOULD NOT re-use the same handle for the same provisioning domain across
+    attaches because: awesome explanation goes here.
+
         </t>
         <t>
 Given that PvD identifiers may be of a length or form not easily passed around programmatically, API implementions SHOULD consider a programmatically simple handle for use with the variety of API calls.
 
 https://tools.ietf.org/html/rfc7556#section-2.4
         </t>
+
+<t>
+API implementations that use short handles to reference PvD information (identifiers, configuration information) SHOULD consider varying the handle used for
+a specific PvD with each separate attach, e.g. a 3GPP connection to "apn.carrier.example" might have handle 100 for the first attach after boot,
+and 101 for the next attach after going into and coming out of "airplane mode".  Because there is no guarantee that the configuration information, like delegated
+prefixes and configured IP addresses, will be the same with every successful attachment to the same PvD, changing the handle accordingly can help
+to disabuse application writers of erroneous notions of caching PvD configuration information from one attachment instance to another.
+</t>
       </section>
     </section>
 
-    <section title="Updated API functions for scoping functionality to a specific PvD">
+    <section title="XXX Updated API functions for scoping functionality to a specific PvD">
       <t>
 - everything that implicitly used a single PvD, e.g. when a single interface was connected to a single PvD network, SHOULD be extended to be invoked with a PvD argument
       </t>
@@ -600,14 +636,11 @@ sendmsg() / recvmsg() cmsg semantics
       </t>
       <t>
 - sockets examples:
-<figure>
-<artwork>
-<![CDATA[
 
 /*
  * getsockopt()/setsockopt()
  *
- * The header file <sys/socket.h> SHALL define SO_PVD_HANDLE in supporting
+ * The header file sys/socket.h SHALL define SO_PVD_HANDLE in supporting
  * implementations, for use with getsockopt/setsockopt and the SOL_SOCKET
  * level.  The option_value shall be understood to be a pointer to a
  * pvd_handle_t and the option_len is required to be sizeof(pvd_handle_t).
@@ -616,7 +649,7 @@ sendmsg() / recvmsg() cmsg semantics
  * specified socket to function only within the specified PVD currently
  * described by pvd_handle_t.  If the pvd_handle_t argument has the value
  * PVD_HANDLE then the operating-system policy-defined default is
- * to be used (see <net/pvd.h>).
+ * to be used (see net/pvd.h).
  */
 
 /*
@@ -659,11 +692,8 @@ sendmsg() / recvmsg() cmsg semantics
  * with similar accept()-style semantics.
  */
 
-]]>
-</artwork>
-</figure>
       </t>
-      <section title="DNS resolution">
+      <section title="XXX DNS resolution">
         <t>
         </t>
         <t>
@@ -697,45 +727,6 @@ Implementations of <xref target="RFC3493">RFC 3493</xref>
 
     </section>
 
-<!--
-
-Notes
-
-
-  - a given provisioning domain MUST NOT be assumed to have the same handle across attaches
-
-  - implementations SHOULD NOT re-use the same handle for the same provisioning domain across
-    attaches because: awesome explanation goes here.
-
--->
-
-    <section anchor="tl_dr" title="TL;DR">
-      <t>
-<list counter="reqs" hangIndent="4" style="format R%d">
-<t>
-API implementations that use short handles to reference PvD information (identifiers, configuration information) SHOULD consider varying the handle used for
-a specific PvD with each separate attach, e.g. a 3GPP connection to "apn.carrier.example" might have handle 100 for the first attach after boot,
-and 101 for the next attach after going into and coming out of "airplane mode".  Because there is no guarantee that the configuration information, like delegated
-prefixes and configured IP addresses, will be the same with every successful attachment to the same PvD, changing the handle accordingly can help
-to disabuse application writers of erroneous notions of caching PvD configuration information from one attachment instance to another.
-</t>
-<t>
-There MUST be an API call which, when passed a PvD identifier or short handle, returns elements of configuration information specific to that PvD.
-</t>
-<t>
-An MPvD API implementation MUST include a mechanism whereby an application can learn of changes to the configuration information of a given PvD, e.g. a new temporary
-address has been formed, a new secondary DNS server has replaced the previous secondary, et cetera.
-</t>
-<t>
-For every element of system functionality that has historically been performed in the context of a single, implicit PvD an API extension MUST exist allowing the application to specificy that the same functionality be
-performed within the scope of an explicitly requested PvD (via identifier or handle).
-</t>
-<t>
-</t>
-</list>
-      </t>
-    </section>
-
     <!-- Possibly a 'Contributors' section ... -->
     <section anchor="acks" title="Acknowledgements">
       <t>
@@ -752,16 +743,16 @@ Additional thanks to the coffee shops of Tokyo.
       <t>This memo includes no request to IANA.</t>
     </section>
 
-    <section anchor="Security" title="Security Considerations">
+    <section anchor="Security" title="XXX Security Considerations">
       <t>
 Consider whether 7556 section 8 should be referenced.  Possibly not, since
 those seem to be focused on external PvD-altering threats.
       </t>
       <t>
-The major new security impact of an MPvD API is that it becomes much
+The major new security impact of a PvD-aware API is that it becomes much
 simpler (by design) to write a functional application to create a bridging
-data path between two PvDs that would not have otherwise been directly
-connected.
+data path between two PvDs that would not have otherwise necessarily have been
+so easily connected.
       </t>
       <t>
 For some operating systems, existing APIs already make this bridging
@@ -814,7 +805,6 @@ use of more than one PvD (or the MPvD API itself) MAY be similarly restricted.
       &RFC3879;
       &RFC4191;
       &RFC6418;
-      &RFC6419;
     </references>
 
 <!--

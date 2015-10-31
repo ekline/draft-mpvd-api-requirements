@@ -4,12 +4,12 @@
 
 Internet Engineering Task Force                                 E. Kline
 Internet-Draft                                           Google Japan KK
-Intended status: Informational                          October 30, 2015
-Expires: May 02, 2016
+Intended status: Informational                          October 31, 2015
+Expires: May 3, 2016
 
 
              Multiple Provisioning Domains API Requirements
-                     draft-kline-mif-pvdapireqs-00
+                    draft-kline-mif-mpvd-api-reqs-00
 
 Abstract
 
@@ -36,7 +36,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on May 02, 2016.
+   This Internet-Draft will expire on May 3, 2016.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Kline                     Expires May 02, 2016                  [Page 1]
+Kline                      Expires May 3, 2016                  [Page 1]
 
 Internet-Draft            MPvD API Requirements             October 2015
 
@@ -67,32 +67,34 @@ Table of Contents
      1.1.  Requirements Language . . . . . . . . . . . . . . . . . .   3
    2.  High level requirements . . . . . . . . . . . . . . . . . . .   3
      2.1.  Requirements for an API . . . . . . . . . . . . . . . . .   3
-     2.2.  Requirements for supporting operating systems . . . . . .   4
+     2.2.  Requirements for supporting operating systems . . . . . .   5
        2.2.1.  Source address selection  . . . . . . . . . . . . . .   5
-       2.2.2.  Route isolation . . . . . . . . . . . . . . . . . . .   5
+       2.2.2.  Route isolation . . . . . . . . . . . . . . . . . . .   6
        2.2.3.  Automatic PvD metadata marking  . . . . . . . . . . .   6
        2.2.4.  Additional system and library support . . . . . . . .   6
-   3.  Conceptual PvDs . . . . . . . . . . . . . . . . . . . . . . .   6
-     3.1.  The 'null' PvD  . . . . . . . . . . . . . . . . . . . . .   6
-     3.2.  The 'loopback' PvD  . . . . . . . . . . . . . . . . . . .   7
-     3.3.  The 'default' PvD . . . . . . . . . . . . . . . . . . . .   7
-   4.  Requirements for new API functionality  . . . . . . . . . . .   7
-     4.1.  learning about PvDs . . . . . . . . . . . . . . . . . . .   7
-     4.2.  learning information within a PvD . . . . . . . . . . . .   8
-     4.3.  scoping functionality to a specific PvD . . . . . . . . .   8
-     4.4.  Policy restrictions . . . . . . . . . . . . . . . . . . .   9
-     4.5.  Explicit versus Implicit PvDs . . . . . . . . . . . . . .   9
-     4.6.  Use of PvD identifiers versus shorthand references  . . .   9
-   5.  Updated API functions for scoping functionality to a specific
-       PvD . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  10
-     5.1.  DNS resolution  . . . . . . . . . . . . . . . . . . . . .  12
-   6.  TL;DR . . . . . . . . . . . . . . . . . . . . . . . . . . . .  13
-   7.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  13
-   8.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  13
-   9.  Security Considerations . . . . . . . . . . . . . . . . . . .  13
-   10. References  . . . . . . . . . . . . . . . . . . . . . . . . .  14
-     10.1.  Normative References . . . . . . . . . . . . . . . . . .  14
-     10.2.  Informative References . . . . . . . . . . . . . . . . .  15
+   3.  XXX Conceptual PvDs . . . . . . . . . . . . . . . . . . . . .   7
+     3.1.  XXX The 'null' PvD  . . . . . . . . . . . . . . . . . . .   7
+     3.2.  XXX The 'loopback' PvD  . . . . . . . . . . . . . . . . .   7
+     3.3.  XXX The 'default' PvD . . . . . . . . . . . . . . . . . .   7
+   4.  Requirements for new API functionality  . . . . . . . . . . .   8
+     4.1.  Learning of PvD availability  . . . . . . . . . . . . . .   8
+     4.2.  Learning network configuration information comprising a
+           PvD . . . . . . . . . . . . . . . . . . . . . . . . . . .   8
+     4.3.  XXX Scoping functionality to a specific PvD . . . . . . .   9
+     4.4.  XXX Explicit versus Implicit PvDs . . . . . . . . . . . .   9
+     4.5.  Policy restrictions . . . . . . . . . . . . . . . . . . .  10
+     4.6.  XXX PvD Programmatic reference implementation
+           considerations  . . . . . . . . . . . . . . . . . . . . .  10
+   5.  XXX Updated API functions for scoping functionality to a
+       specific PvD  . . . . . . . . . . . . . . . . . . . . . . . .  11
+     5.1.  XXX DNS resolution  . . . . . . . . . . . . . . . . . . .  12
+   6.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  13
+   7.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  13
+   8.  XXX Security Considerations . . . . . . . . . . . . . . . . .  13
+   9.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  14
+     9.1.  Normative References  . . . . . . . . . . . . . . . . . .  14
+     9.2.  Informative References  . . . . . . . . . . . . . . . . .  14
+     9.3.  URIs  . . . . . . . . . . . . . . . . . . . . . . . . . .  15
    Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .  15
 
 1.  Introduction
@@ -107,9 +109,7 @@ Table of Contents
 
 
 
-
-
-Kline                     Expires May 02, 2016                  [Page 2]
+Kline                      Expires May 3, 2016                  [Page 2]
 
 Internet-Draft            MPvD API Requirements             October 2015
 
@@ -165,7 +165,7 @@ Internet-Draft            MPvD API Requirements             October 2015
 
 
 
-Kline                     Expires May 02, 2016                  [Page 3]
+Kline                      Expires May 3, 2016                  [Page 3]
 
 Internet-Draft            MPvD API Requirements             October 2015
 
@@ -189,9 +189,18 @@ Internet-Draft            MPvD API Requirements             October 2015
        specify the PvD within which networking operations are to be
        restricted.
 
+   R4  consistent use of programmatic references to PvDs
+
+       For uniformity and simplicity, every PvD-aware API functional
+       element SHOULD use (as return values of function calls, function
+       arguments, et cetera) the same programmatic reference for PvDs,
+       e.g. a construct containing a PvD identifier [10] or some
+       equivalent shorthand reference token (see Section 4.6 for a
+       discussion of implementation considerations).
+
    It is import to note that there is always a provisioning domain
    within which networking functionality is scoped.  For simply-
-   connected hosts this may be the implicit PvD [10] created by a single
+   connected hosts this may be the implicit PvD [11] created by a single
    networking interface connected to a traditional, shared LAN segment.
    For multihomed hosts the "default provisioning domain" is likely a
    matter of policy, but MAY be a "null" PvD, i.e. one completely devoid
@@ -202,29 +211,31 @@ Internet-Draft            MPvD API Requirements             October 2015
    control the scope of networking functionality) suggests that the
    Provisioning Domain is perhaps a more useful operational definition
    for the original IPv6 concept of a "site-local scope" than the ill-
-   fated [RFC3879], "ill-defined concept" [11] of a site.  It also
+   fated [RFC3879], "ill-defined concept" [12] of a site.  It also
    suggests one possible way by which host operating support for a PvD-
    aware API might be implemented.
+
+
+
+
+
+
+
+Kline                      Expires May 3, 2016                  [Page 4]
+
+Internet-Draft            MPvD API Requirements             October 2015
+
 
 2.2.  Requirements for supporting operating systems
 
    The multiple PvD model of host behaviour is perhaps closer to the
    Strong End System Model than the Weak End System Model characterized
-   in RFC 1122 [RFC1122] section 3.3.4.2 [12], but owing to its
+   in RFC 1122 [RFC1122] section 3.3.4.2 [13], but owing to its
    recognition of a many-to-many relationship between interfaces and
    PvDs should be considered a unique model unto itself.
 
    In the PvD-aware End System Model, the "two key requirement issues
    related to multihoming" are restated as:
-
-
-
-
-
-Kline                     Expires May 02, 2016                  [Page 4]
-
-Internet-Draft            MPvD API Requirements             October 2015
-
 
    a.  A host MAY silently discard an incoming datagram whose
        destination address does not correspond to any PvD associated
@@ -247,19 +258,29 @@ Internet-Draft            MPvD API Requirements             October 2015
    Whenever a source address is to be selected on behalf of an
    application it is essential for consistent use that only source
    addresses belonging to the currently scoped PvD be used a candidate
-   set.  (See RFC 6418 [RFC6418] section 3.5 [13] for references to
+   set.  (See RFC 6418 [RFC6418] section 3.5 [14] for references to
    issues arising from poor source address selection.)
 
    For nodes following the PvD-aware End System Model, RFC 6724
-   [RFC6724] section 4 [14] is amended as follows:
+   [RFC6724] section 4 [15] is amended as follows:
 
-   R4  The candidate source addresses MUST be restricted to the set of
+   R5  The candidate source addresses MUST be restricted to the set of
        unicast addresses associated with the (explicitly or implicitly)
        specified PvD.
 
        Additionally, source address selection policies from PvDs other
        than the (explicitly or implicitly) specified PvD MUST NOT be
        applied.
+
+
+
+
+
+
+Kline                      Expires May 3, 2016                  [Page 5]
+
+Internet-Draft            MPvD API Requirements             October 2015
+
 
 2.2.2.  Route isolation
 
@@ -269,20 +290,13 @@ Internet-Draft            MPvD API Requirements             October 2015
    reachability check (and subsequent source address selection)
    performed during something like the Sockets API connect() call on a
    UDP socket to learn reachability information cheaply cannot function
-   correctly otherwise.  RFC 6418 [RFC6418] section 4.2 [15] contains
+   correctly otherwise.  RFC 6418 [RFC6418] section 4.2 [16] contains
    more discussion and references to issues arising from insufficiently
    isolated routing information.
 
    For nodes following the PvD-aware End System Model:
 
-
-
-Kline                     Expires May 02, 2016                  [Page 5]
-
-Internet-Draft            MPvD API Requirements             October 2015
-
-
-   R5  The set of routes consulted for any routing decision MUST be
+   R6  The set of routes consulted for any routing decision MUST be
        restricted to the routes associated with the (explicitly or
        implicitly) specified PvD.
 
@@ -300,16 +314,15 @@ Internet-Draft            MPvD API Requirements             October 2015
 
    For nodes following the PvD-aware End System Model:
 
-   R6  For networking functionality performed on behalf of an
+   R7  For networking functionality performed on behalf of an
        application, the supporting operating system MUST record and make
        available to the application either (1) all the information the
        application might need to make a PvD evaluation on its own or (2)
-       the PvD identifier (or an equivalent shorthand reference thereto,
-       whichever is most useful within the context of the API) directly.
+       the API's PvD programmatic reference directly.
 
        A supporting operating system SHOULD record and make available
-       the PvD identifier (or an equivalent reference); other approaches
-       invite ambiguity among applications' interpretation of available
+       the API's PvD programmatic reference; other approaches invite
+       ambiguity among applications' interpretation of available
        information.
 
 2.2.4.  Additional system and library support
@@ -317,26 +330,20 @@ Internet-Draft            MPvD API Requirements             October 2015
    Frequently, operating systems have several additional supporting
    libraries and services for more advance networking functionality.
    Using the system's own PvD API, meeting the above requirements, it
-   should be possible to extend them to provide correct per-PvD
-   isolation of information and application support.
-
-3.  Conceptual PvDs
-
-3.1.  The 'null' PvD
 
 
 
-
-
-
-
-
-
-
-Kline                     Expires May 02, 2016                  [Page 6]
+Kline                      Expires May 3, 2016                  [Page 6]
 
 Internet-Draft            MPvD API Requirements             October 2015
 
+
+   should be possible to extend them to provide correct per-PvD
+   isolation of information and application support.
+
+3.  XXX Conceptual PvDs
+
+3.1.  XXX The 'null' PvD
 
    Useful to ensure networking functions fail (and fail quickly) If
    there are no PvDs accessible to a user/group/application, either as a
@@ -346,7 +353,7 @@ Internet-Draft            MPvD API Requirements             October 2015
    queries or to apply as the PvD of use in the absence of other
    explicitly reference PvDs.
 
-3.2.  The 'loopback' PvD
+3.2.  XXX The 'loopback' PvD
 
    - useful to scope networking functions to the node only - has only
    locally assigned addresses and routes specifying local delivery and
@@ -354,7 +361,7 @@ Internet-Draft            MPvD API Requirements             October 2015
    of locally accessible services - TODO: ask for help/clarification
    here
 
-3.3.  The 'default' PvD
+3.3.  XXX The 'default' PvD
 
    PvD-aware system as a whole SHOULD have a notion of currently active
    default PvD
@@ -380,113 +387,99 @@ Internet-Draft            MPvD API Requirements             October 2015
    compatibility, and to promote another active PvD in its place as
    circumstances change.
 
+
+
+Kline                      Expires May 3, 2016                  [Page 7]
+
+Internet-Draft            MPvD API Requirements             October 2015
+
+
    TBD: 'PVD_UNSPEC'
 
 4.  Requirements for new API functionality
 
-4.1.  learning about PvDs
+4.1.  Learning of PvD availability
+
+   R8  A PvD-aware API MUST implement a mechanism whereby an application
+       can receive a set of the API's PvD programmatic references
+       representing the complete set of PvDs (both explicit [17] and
+       implicit [18]) with which the node is currently associated.
+
+   R9  A PvD-aware API implementation SHOULD contain a mechanism
+       enabling an application to be notified of changes in the above
+       set of actively associated PvDs in a comparatively efficient
+       manner (i.e. more efficient than polling).
+
+4.2.  Learning network configuration information comprising a PvD
+
+   R10 A PvD-aware API MUST include a mechanism whereby by an
+       application, using the API's PvD programmatic reference, can
+       receive elements of the network configuration information that
+       comprise a PvD.  At a minimum, this mechanism MUST be capable of
+       answering queries for:
+
+       *  the PvD identifier
+
+       *  all participating interfaces
+
+       *  all IPv4 and all non-deprecated IPv6 addresses
+
+       *  all configured DNS nameservers
+
+   A PvD's network configuration information is neither guaranteed to be
+   learned atomically nor is it guaranteed to be static.  Addresses,
+   routes, and even DNS nameservers and participating interfaces may
+   each change over the lifetime of the node's association to a given
+   PvD.  Timely notification of such changes may be of particular
+   importance to some applications.
+
+   R11 A PvD-aware API implementation SHOULD contain a mechanism
+       enabling an application to be notified of changes in the
+       networking configuration information comprising a PvD in a
+       comparatively efficient manner (i.e. more efficient than
+       polling).
+
+   R12 A network configuration query API implementation SHOULD take
+       extensibility into account, to support querying for configuration
 
 
 
 
-Kline                     Expires May 02, 2016                  [Page 7]
+Kline                      Expires May 3, 2016                  [Page 8]
 
 Internet-Draft            MPvD API Requirements             October 2015
 
 
-   This data generally does not become available to a node in an atomic
-   fashion, and can change over time (RAs with 6106 that add or replace
-   DNS servers in previous RAs, ...).  Routes and prefixes can come and
-   go and yet all be part of the same provisioning domain.  An API call
-   MUST exist whereby an application can learn the identifiers, or short
-   handles, of all PvDs active on the system at the time.  - MUST
-   existence (subject to policy) - both implicit and explicit PvDs must
-   also be included in the API response - updates to availability -
-   SHOULD new - MAY going away (useful) - MAY gone (app may also learn
-   via errors) The same PvD may arrive on another interface (3GPP
-   interface and WLAN -- find 3gpp spec reference).  An MPvD API
-   implementation MUST include a mechanism whereby an application can
-   learn of/be notified of: the arrival of new PvDs or the anticipated
-   removal of a PvD.  Actual removal of a PvD can be learned by
-   observing any blocking PvD API operation for errors indicating the
-   loss of the PvD (e.g. a socket read() returning ENONET).
+       information not yet conceived of with minimal adverse impact to
+       applications.
 
-4.2.  learning information within a PvD
+4.3.  XXX Scoping functionality to a specific PvD
 
-   - configuration - SHOULD be an API to get configuration information
-   for a specific PvD - SHOULD configuration changes (app may also learn
-   via errors) - such an API MUST be easily extensible to support
-   configuration information not yet considered Reason to be extensible:
-   - methods to get attributes of a PVD, like whether it is comprised of
-   a mobile link versus wifi/ethernet, whether there is some metering/
-   charging associated with traffic sent/received via this PVD or not,
-   etc.  This API MUST be extensible, as PvD information is not
-   guaranteed to be learned atomically nor is it guaranteed to be
-   static.  Furthermore, this API needs to be extensible in order to
-   accommodate requesting new configuration information not yet
-   conceived of at this time, e.g. a new FOO protocol is used within a
-   given PvD and it's important for applications to learn that they need
-   to use the proxy BAR for best performance.  - get PvD configuration
-   data - notification of configuration changes - figure out how to
-   express PvD : interface/scope_id relationship
+   R13 A PvD-aware API implementation MUST include a mechanism for an
+       application to specify the PvD programmatic reference of the PvD
+       to which all networking functionality MUST be restricted when not
+       otherwise explicitly specified (an application-specific "default
+       PvD").
 
-4.3.  scoping functionality to a specific PvD
+   R14 The API implementation MUST support setting such a "default PvD"
+       for an application's entire process (and by extension its child
+       processes).  Additionally, the API SHOULD support an application
+       setting a "default PvD" at every granularity of "programming
+       parallelization", i.e. not only per-process, but also per-thread,
+       per-fiber, et cetera.
 
-   API implementors SHOULD provide a mechanism for an application to set
-   its default PvD, i.e. the PvD to be used by API calls made without
-   reference to an explicit PvD.  API implementors SHOULD provide a
-   mechanism for an application to set its default PvD at the
-   granularity of "programming parallelization": per-process, per-
-   thread, per-fiber, et cetera.  - PvD-aware applications need to be
-   able to specify that some functionality should be scoped to an
-   implicit PvD - apps SHOULD be able to specify which PvD is to be used
-   for network-related functionality at the granularity of programming
-   parallelism: - per-process (and child processes) - per-thread - per-
+   R15 For every degree of granularity at which an application may
+       specify a "default PvD" there MUST exist a corresponding
+       mechanism to retrieve the currently specified implementation-
+       specific PvD programmatic reference.
 
-
-
-Kline                     Expires May 02, 2016                  [Page 8]
-
-Internet-Draft            MPvD API Requirements             October 2015
-
-
-   fiber - useful for being able to start non-PvD-aware apps within a
+   XXX - useful for being able to start non-PvD-aware apps within a
    single PvD context unbeknownst to them and operate correctly -
    indeed, this could be used as a definition / validation that a PvD
-   implemention is correct: non-PvD-aware apps function correctly, with
-   no negative impact, in a single PvD without being PvD-aware - also
-   per application control (e.g. process groups) // Retrieve the current
-   "default" PVD.  If the return type is // PVD_HANDLE_INVALID there may
-   be no PVD accessible to this process // at this time or no system
-   support for this API.  // // These values are used by PVD-aware
-   function calls when a PVD index // is not explicitly specified.
-   pvd_handle_t pvd_system_default(); // Same as above, but operates at
-   a per-process level.  If no // process-specific default has been set
-   this MUST return the value // of a call to
-   pvd_current_system_default().  pvd_handle_t pvd_process_default(); //
-   Same as above, but operates at a per-thread level.  If no // thread-
-   specific default has been set this MUST return the value // of a call
-   to pvd_current_process_default().  pvd_handle_t pvd_thread_default();
-   int pvd_set_process_default(pvd_handle_t); int
-   pvd_set_thread_default(pvd_handle_t); // Any function that is not
-   easily extended to support a pvd_handle_t // argument, but for which
-   the underlying operating system understands // the process-global or
-   per-thread pvd_index can be wrapped to create // a PVD-aware variant
-   like so: // // return_type pvd_functioname(pvd_handle_t pvdix,
-   regular arguments...) { // pvd_handle_t saved = pvd_thread_default();
-   // if (pvd_set_thread_default(pvdix) != 0) { // // handle error //
-   return error_indicator_value; // } // return_type result =
-   functionname(regular arguments...); // pvd_set_thread_default(saved);
-   // Should error-check // return result; // }
+   implementation is correct: non-PvD-aware apps function correctly,
+   with no negative impact, in a single PvD without being PvD-aware
 
-4.4.  Policy restrictions
-
-   An MPvD API implementation MAY implement policy controls whereby
-   access to PvD availability, configuration information, and explicit
-   scoping requests are variously permitted or denied to certain
-   applications.
-
-4.5.  Explicit versus Implicit PvDs
+4.4.  XXX Explicit versus Implicit PvDs
 
    - the API used by PvD-aware applications MUST support both implicit
    and explicit PvDs - It SHOULD NOT be necessary for a PvD-aware
@@ -496,48 +489,93 @@ Internet-Draft            MPvD API Requirements             October 2015
    can be used without application change in the same ways as explicit
    PvDs
 
-4.6.  Use of PvD identifiers versus shorthand references
+   For every element of system functionality that has historically been
+   performed in the context of a single, implicit PvD an API extension
+   MUST exist allowing the application to specificy that the same
+   functionality be performed within the scope of an explicitly
+   requested PvD (via identifier or handle).
 
 
 
 
-Kline                     Expires May 02, 2016                  [Page 9]
+
+
+
+Kline                      Expires May 3, 2016                  [Page 9]
 
 Internet-Draft            MPvD API Requirements             October 2015
 
 
-   shorthand reference, "handle", "token" - node-specific token used to
-   identify an instance of a single provisioning domain's configuration
-   data // Not guaranteed to be stable across across associations to a
-   PVD.  // // The same PVD may have different pvd_handle_t's if, for
-   example, // when reattaching later to the same PVD (returning home in
-   the // evening), the same PVD may be assigned a different
-   pvd_handle_t.  // // The pvd_handle_t must remain valid until a
-   disconnection or // disassociation event occurs, after which the
-   pvd_handle_t MUST NOT // be recycled to refer to a different PVD so
-   long as there remain // any identifiable references to it (e.g. a
-   process or thread still // has this PVD index set as its default).  /
-   / // Applications explicitly specifying PVD indices to PVD-aware //
-   functions are not readily identifiable (indeed an application //
-   could progressively walk the PVD index space attempting various //
-   function calls without ever having received any indication from //
-   the system that a given index was valid).  In order to account for //
-   this, PVD indices SHOULD NOT be recycled, to the extent possible.  //
-   One acceptable implementation approach is to assign every new PVD //
-   context a strictly monotonically increasing index, such that any //
-   specific index is not reused until the unsigned integer space has //
-   been completely exhausted, before restarting again from 1.  // The
-   value PVD_HANDLE_UNSPEC is used to indicate no specific PVD.  // //
+4.5.  Policy restrictions
+
+   This document does not make recommendations about policies governing
+   the use of any or all elements of a PvD API, save only to note that
+   some restrictions on use may be deemed necessary or appropriate.
+
+   R16 A PvD API implementation MAY implement policy controls whereby
+       access to PvD availability information, configuration elements,
+       and/or explicit scoping requests is variously permitted or denied
+       to certain applications.
+
+4.6.  XXX PvD Programmatic reference implementation considerations
+
+   - node-specific token used to identify an instance of a single
+   provisioning domain's configuration data // Not guaranteed to be
+   stable across across associations to a PVD.  // // The same PVD may
+   have different pvd_handle_t's if, for example, // when reattaching
+   later to the same PVD (returning home in the // evening), the same
+   PVD may be assigned a different pvd_handle_t.  // // The pvd_handle_t
+   must remain valid until a disconnection or // disassociation event
+   occurs, after which the pvd_handle_t MUST NOT // be recycled to refer
+   to a different PVD so long as there remain // any identifiable
+   references to it (e.g. a process or thread still // has this PVD
+   index set as its default).  // // Applications explicitly specifying
+   PVD indices to PVD-aware // functions are not readily identifiable
+   (indeed an application // could progressively walk the PVD index
+   space attempting various // function calls without ever having
+   received any indication from // the system that a given index was
+   valid).  In order to account for // this, PVD indices SHOULD NOT be
+   recycled, to the extent possible.  // One acceptable implementation
+   approach is to assign every new PVD // context a strictly
+   monotonically increasing index, such that any // specific index is
+   not reused until the unsigned integer space has // been completely
+   exhausted, before restarting again from 1.  // The value
+   PVD_HANDLE_UNSPEC is used to indicate no specific PVD.  // //
    Depending on the context it may indicate that the system does not //
    implement support for the Provisioning Domain API, an error, or // a
-   signal to "clear" previous PVD index state.
+   signal to "clear" previous PVD index state.  - a given provisioning
+   domain MUST NOT be assumed to have the same handle across attaches -
+   implementations SHOULD NOT re-use the same handle for the same
+   provisioning domain across attaches because: awesome explanation goes
+   here.
 
    Given that PvD identifiers may be of a length or form not easily
    passed around programmatically, API implementions SHOULD consider a
    programmatically simple handle for use with the variety of API calls.
    https://tools.ietf.org/html/rfc7556#section-2.4
 
-5.  Updated API functions for scoping functionality to a specific PvD
+
+
+
+Kline                      Expires May 3, 2016                 [Page 10]
+
+Internet-Draft            MPvD API Requirements             October 2015
+
+
+   API implementations that use short handles to reference PvD
+   information (identifiers, configuration information) SHOULD consider
+   varying the handle used for a specific PvD with each separate attach,
+   e.g. a 3GPP connection to "apn.carrier.example" might have handle 100
+   for the first attach after boot, and 101 for the next attach after
+   going into and coming out of "airplane mode".  Because there is no
+   guarantee that the configuration information, like delegated prefixes
+   and configured IP addresses, will be the same with every successful
+   attachment to the same PvD, changing the handle accordingly can help
+   to disabuse application writers of erroneous notions of caching PvD
+   configuration information from one attachment instance to another.
+
+5.  XXX Updated API functions for scoping functionality to a specific
+    PvD
 
    - everything that implicitly used a single PvD, e.g. when a single
    interface was connected to a single PvD network, SHOULD be extended
@@ -554,14 +592,6 @@ Internet-Draft            MPvD API Requirements             October 2015
    routing table is restricted to the specified PvD - if a source
    address has already been selected from one PvD, transmitting via
    another PvD is NOT RECOMMENDED (but of course possible) -
-
-
-
-Kline                     Expires May 02, 2016                 [Page 10]
-
-Internet-Draft            MPvD API Requirements             October 2015
-
-
    PVD_UNSPECIFIED - no PvD explicitly requested - also used to clear a
    process or thread default and revert to system default - for PF_INET
    / PF_INET6 sockets - socket() - if a process-default or thread-
@@ -580,133 +610,79 @@ Internet-Draft            MPvD API Requirements             October 2015
    bound to PVD_UNSPECIFIED - the PvD of the destination address on the
    system - connect() - bind() discussion applies for source address
    selection - EHOSTUNREACH / ENETUNREACH might be returned sendmsg() /
-   recvmsg() cmsg semantics - setsockopt() / getsockopt() options apply
-   - IP_RECVPVD / IPV6_RECVPV6 - IP_PVD / IPV6_PVD
-
-   - sockets examples:
 
 
 
-   /*
-    * getsockopt()/setsockopt()
-    *
-    * The header file <sys/socket.h> SHALL define SO_PVD_HANDLE in supporting
-    * implementations, for use with getsockopt/setsockopt and the SOL_SOCKET
-    * level.  The option_value shall be understood to be a pointer to a
-    * pvd_handle_t and the option_len is required to be sizeof(pvd_handle_t).
-    *
-    * Setting the SO_PVD_HANDLE option constrains all operations on the
-    * specified socket to function only within the specified PVD currently
-    * described by pvd_handle_t.  If the pvd_handle_t argument has the value
-    * PVD_HANDLE then the operating-system policy-defined default is
-    * to be used (see <net/pvd.h>).
-    */
-
-   /*
-    * recvmsg()/sendmsg()
-    *
-    * The same SO_PVD_HANDLE defined above shall be used as the cmsg_type in
-    * conjunction with the SOL_SOCKET cmsg_level to specify struct cmsghdr
-    * entries for use with recvmsg() and sendmsg().  These have the same
-    * effect described above though applicability is limited to the immediate
-    * sendmsg()/recvmsg() invocaton and not for the lifetime the socket file
-
-
-
-Kline                     Expires May 02, 2016                 [Page 11]
+Kline                      Expires May 3, 2016                 [Page 11]
 
 Internet-Draft            MPvD API Requirements             October 2015
 
 
-    * descriptor.
-    *
-    * In certain situations it may be difficult or impossible for an operating
-    * system to determing the correct pvd_handle_t for incoming messages (e.g.
-    * when there are multiple provisioning domains in a single interface and
-    * the system is unable to determine which PVD should be associated with
-    * the source of the message.  In such cases, the value returned in the
-    * cmsg_data field MAY be PVD_HANDLE. This is not an error, but
-    * rather an underspecified situation.
-    */
+   recvmsg() cmsg semantics - setsockopt() / getsockopt() options apply
+   - IP_RECVPVD / IPV6_RECVPV6 - IP_PVD / IPV6_PVD
 
-   /*
-    * accept()
-    *
-    * If a listening socket is associated with a single PVD, e.g. via a prior
-    * call to pvd_set_*_default(...) or setsockopt(SOL_SOCKET, SO_PVD_HANDLE, ...)
-    * then traffic arriving from other provisioning domains MUST NOT cause a new
-    * connection.
-    *
-    * Furthermore, whether or not a listening socket has a specified PVD, the
-    * specified PVD MUST be set for the accept()ed file descriptor.  Note that
-    * in certain situations (e.g. listening socket using PVD_HANDLE_UNSPEC and
-    * multiple PVDs on a single interface with insufficient data to map
-    * incoming traffic to specific PVDs), the specified PVD MAY be
-    * PVD_HANDLE_UNSPEC.  This is not an error, but rather an underspecified
-    * situation.
-    *
-    * More broadly, operating systems SHOULD, wherever possible, implement
-    * this style of incoming specified pvd_handle_t reflection for other protocols
-    * with similar accept()-style semantics.
-    */
+   - sockets examples: /* * getsockopt()/setsockopt() * * The header
+   file sys/socket.h SHALL define SO_PVD_HANDLE in supporting *
+   implementations, for use with getsockopt/setsockopt and the
+   SOL_SOCKET * level.  The option_value shall be understood to be a
+   pointer to a * pvd_handle_t and the option_len is required to be
+   sizeof(pvd_handle_t).  * * Setting the SO_PVD_HANDLE option
+   constrains all operations on the * specified socket to function only
+   within the specified PVD currently * described by pvd_handle_t.  If
+   the pvd_handle_t argument has the value * PVD_HANDLE then the
+   operating-system policy-defined default is * to be used (see net/
+   pvd.h).  */ /* * recvmsg()/sendmsg() * * The same SO_PVD_HANDLE
+   defined above shall be used as the cmsg_type in * conjunction with
+   the SOL_SOCKET cmsg_level to specify struct cmsghdr * entries for use
+   with recvmsg() and sendmsg().  These have the same * effect described
+   above though applicability is limited to the immediate *
+   sendmsg()/recvmsg() invocaton and not for the lifetime the socket
+   file * descriptor.  * * In certain situations it may be difficult or
+   impossible for an operating * system to determing the correct
+   pvd_handle_t for incoming messages (e.g.  * when there are multiple
+   provisioning domains in a single interface and * the system is unable
+   to determine which PVD should be associated with * the source of the
+   message.  In such cases, the value returned in the * cmsg_data field
+   MAY be PVD_HANDLE.  This is not an error, but * rather an
+   underspecified situation.  */ /* * accept() * * If a listening socket
+   is associated with a single PVD, e.g. via a prior * call to
+   pvd_set_*_default(...) or setsockopt(SOL_SOCKET, SO_PVD_HANDLE, ...)
+   * then traffic arriving from other provisioning domains MUST NOT
+   cause a new * connection.  * * Furthermore, whether or not a
+   listening socket has a specified PVD, the * specified PVD MUST be set
+   for the accept()ed file descriptor.  Note that * in certain
+   situations (e.g. listening socket using PVD_HANDLE_UNSPEC and *
+   multiple PVDs on a single interface with insufficient data to map *
+   incoming traffic to specific PVDs), the specified PVD MAY be *
+   PVD_HANDLE_UNSPEC.  This is not an error, but rather an
+   underspecified * situation.  * * More broadly, operating systems
+   SHOULD, wherever possible, implement * this style of incoming
+   specified pvd_handle_t reflection for other protocols * with similar
+   accept()-style semantics.  */
 
-
-
-5.1.  DNS resolution
+5.1.  XXX DNS resolution
 
    For nodes following the PvD-aware End System Model:
 
-   R7  A PVD-aware API MUST make it possible for an application to
+   R17 A PVD-aware API MUST make it possible for an application to
        perform normal name resolution constrained to the name resolution
+
+
+
+Kline                      Expires May 3, 2016                 [Page 12]
+
+Internet-Draft            MPvD API Requirements             October 2015
+
+
        configuration within a specified PVD.  /* * getaddrinfo w/
        pvd_handle_t argument */ /* * getnameinfo w/ pvd_handle_t
        argument */ Implementations of RFC 3493 [RFC3493] section 6.1
-       [16] getaddrinfo() - getaddrinfo() and AI_ADDRCONFIG -
+       [19] getaddrinfo() - getaddrinfo() and AI_ADDRCONFIG -
        RFC3493#section-6.1 "...shall be returned only if an IPv4/v6
        address is configured on the local system..." -> "... within the
        requested PvD"
 
-
-
-
-Kline                     Expires May 02, 2016                 [Page 12]
-
-Internet-Draft            MPvD API Requirements             October 2015
-
-
-6.  TL;DR
-
-   R8  API implementations that use short handles to reference PvD
-       information (identifiers, configuration information) SHOULD
-       consider varying the handle used for a specific PvD with each
-       separate attach, e.g. a 3GPP connection to "apn.carrier.example"
-       might have handle 100 for the first attach after boot, and 101
-       for the next attach after going into and coming out of "airplane
-       mode".  Because there is no guarantee that the configuration
-       information, like delegated prefixes and configured IP addresses,
-       will be the same with every successful attachment to the same
-       PvD, changing the handle accordingly can help to disabuse
-       application writers of erroneous notions of caching PvD
-       configuration information from one attachment instance to
-       another.
-
-   R9  There MUST be an API call which, when passed a PvD identifier or
-       short handle, returns elements of configuration information
-       specific to that PvD.
-
-   R10 An MPvD API implementation MUST include a mechanism whereby an
-       application can learn of changes to the configuration information
-       of a given PvD, e.g. a new temporary address has been formed, a
-       new secondary DNS server has replaced the previous secondary, et
-       cetera.
-
-   R11 For every element of system functionality that has historically
-       been performed in the context of a single, implicit PvD an API
-       extension MUST exist allowing the application to specificy that
-       the same functionality be performed within the scope of an
-       explicitly requested PvD (via identifier or handle).
-
-7.  Acknowledgements
+6.  Acknowledgements
 
    The core concepts presented in this document were developed during
    the Android multinetworking effort by Lorenzo Colitti, Robert
@@ -714,26 +690,19 @@ Internet-Draft            MPvD API Requirements             October 2015
 
    Additional thanks to the coffee shops of Tokyo.
 
-8.  IANA Considerations
+7.  IANA Considerations
 
    This memo includes no request to IANA.
 
-9.  Security Considerations
+8.  XXX Security Considerations
 
    Consider whether 7556 section 8 should be referenced.  Possibly not,
    since those seem to be focused on external PvD-altering threats.
 
-
-
-Kline                     Expires May 02, 2016                 [Page 13]
-
-Internet-Draft            MPvD API Requirements             October 2015
-
-
-   The major new security impact of an MPvD API is that it becomes much
-   simpler (by design) to write a functional application to create a
-   bridging data path between two PvDs that would not have otherwise
-   been directly connected.
+   The major new security impact of a PvD-aware API is that it becomes
+   much simpler (by design) to write a functional application to create
+   a bridging data path between two PvDs that would not have otherwise
+   necessarily have been so easily connected.
 
    For some operating systems, existing APIs already make this bridging
    possible, though some functionality like DNS resolution may have been
@@ -752,9 +721,18 @@ Internet-Draft            MPvD API Requirements             October 2015
    o  use of more than one PvD (or the MPvD API itself) MAY be similarly
       restricted.
 
-10.  References
 
-10.1.  Normative References
+
+
+
+Kline                      Expires May 3, 2016                 [Page 13]
+
+Internet-Draft            MPvD API Requirements             October 2015
+
+
+9.  References
+
+9.1.  Normative References
 
    [RFC1122]  Braden, R., Ed., "Requirements for Internet Hosts -
               Communication Layers", STD 3, RFC 1122, DOI 10.17487/
@@ -778,19 +756,12 @@ Internet-Draft            MPvD API Requirements             October 2015
               Architecture", RFC 7556, DOI 10.17487/RFC7556, June 2015,
               <http://www.rfc-editor.org/info/rfc7556>.
 
+9.2.  Informative References
 
-
-
-Kline                     Expires May 02, 2016                 [Page 14]
-
-Internet-Draft            MPvD API Requirements             October 2015
-
-
-10.2.  Informative References
-
-   [RFC1918]  Rekhter, Y., Moskowitz, R., Karrenberg, D., Groot, G., and
-              E. Lear, "Address Allocation for Private Internets", BCP
-              5, RFC 1918, February 1996.
+   [RFC1918]  Rekhter, Y., Moskowitz, B., Karrenberg, D., de Groot, G.,
+              and E. Lear, "Address Allocation for Private Internets",
+              BCP 5, RFC 1918, DOI 10.17487/RFC1918, February 1996,
+              <http://www.rfc-editor.org/info/rfc1918>.
 
    [RFC3879]  Huitema, C. and B. Carpenter, "Deprecating Site Local
               Addresses", RFC 3879, DOI 10.17487/RFC3879, September
@@ -801,13 +772,53 @@ Internet-Draft            MPvD API Requirements             October 2015
               November 2005, <http://www.rfc-editor.org/info/rfc4191>.
 
    [RFC6418]  Blanchet, M. and P. Seite, "Multiple Interfaces and
-              Provisioning Domains Problem Statement", RFC 6418, DOI
-              10.17487/RFC6418, November 2011,
+              Provisioning Domains Problem Statement", RFC 6418, DOI 10
+              .17487/RFC6418, November 2011,
               <http://www.rfc-editor.org/info/rfc6418>.
 
-   [RFC6419]  Wasserman, M. and P. Seite, "Current Practices for
-              Multiple-Interface Hosts", RFC 6419, DOI 10.17487/RFC6419,
-              November 2011, <http://www.rfc-editor.org/info/rfc6419>.
+
+
+
+
+
+Kline                      Expires May 3, 2016                 [Page 14]
+
+Internet-Draft            MPvD API Requirements             October 2015
+
+
+9.3.  URIs
+
+   [1] https://tools.ietf.org/html/rfc7556#section-6.3
+
+   [2] https://tools.ietf.org/html/rfc7556#section-6.1
+
+   [3] https://tools.ietf.org/html/rfc7556#section-6.2
+
+   [4] https://tools.ietf.org/html/rfc7556#section-2
+
+   [5] https://tools.ietf.org/html/rfc7556#section-5.2
+
+   [6] https://tools.ietf.org/html/rfc3493#section-6.1
+
+   [7] https://tools.ietf.org/html/draft-ietf-mif-mpvd-id
+
+   [8] https://tools.ietf.org/html/rfc7556#section-2.2
+
+   [9] https://tools.ietf.org/html/rfc3879#section-2.5
+
+   [10] https://tools.ietf.org/html/rfc1122#section 3.3.4.2
+
+   [11] https://tools.ietf.org/html/rfc6418#section-3.5
+
+   [12] https://tools.ietf.org/html/rfc6724#section-4
+
+   [13] https://tools.ietf.org/html/rfc6418#section-4.2
+
+   [14] https://tools.ietf.org/html/rfc7556#section-2.1
+
+   [15] https://tools.ietf.org/html/rfc7556#section-2.2
+
+   [16] https://tools.ietf.org/html/rfc3493#section-6.1
 
 Author's Address
 
@@ -826,15 +837,4 @@ Author's Address
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-Kline                     Expires May 02, 2016                 [Page 15]
+Kline                      Expires May 3, 2016                 [Page 15]
