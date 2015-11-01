@@ -170,7 +170,7 @@ requirements are placed upon the API itself and the host operating system
 providing the API.
       </t>
 
-      <section title="Requirements for an API">
+      <section anchor="hi_api" title="Requirements for an API">
         <t>
 At the highest level, the requirements for an API that enables applications to
 make sophisticated use of multiple PvDs amount to providing mechanisms by
@@ -197,7 +197,19 @@ stack, be it at a relatively high level like
 <eref target="https://tools.ietf.org/html/rfc3493#section-6.1"
   >getaddrinfo()</eref> or at the level of something like Sockets API's
 sendmsg(), there MUST be a means by which an application can specify the
-PvD within which networking operations are to be restricted. 
+PvD within which networking operations are to be restricted.
+            </t>
+            <t>
+one and only specified scope per networking functionality invocation
+<vspace blankLines="1"/>
+For every unique invocation of a networking API function, there MUST only be
+one specified PvD to which networking functionality is to be restricted.
+At any given point in an application's lifetime there MAY be several
+encapsulating layers of <xref target="unspec_pvd">unspecified PvDs</xref>
+through which the implementation must progressively search to find a specified
+PvD, but ultimately a networking function MUST use one and only one PvD for
+its operations, even if that PvD is a
+<xref target="null_pvd">"null PvD"</xref>.
             </t>
             <t>
 consistent use of programmatic references to PvDs
@@ -233,7 +245,7 @@ perhaps a more useful operational definition for the original IPv6 concept
 of a "site-local scope" than the <xref target="RFC3879">ill-fated</xref>,
 <eref target="https://tools.ietf.org/html/rfc3879#section-2.5"
   >"ill-defined concept"</eref> of a site. It also suggests one possible way
-by which host operating support for a PvD-aware API might be implemented.
+by which operating system support for a PvD-aware API might be implemented.
         </t>
       </section>
 
@@ -363,44 +375,94 @@ to provide correct per-PvD isolation of information and application support.
       </section>
     </section>
 
-    <section anchor="concept_pvds" title="XXX Conceptual PvDs">
-      <section anchor="default_pvd" title="XXX The 'default' PvD">
+    <section anchor="concept_pvds" title="Conceptual PvDs">
+      <section anchor="default_pvd" title="The 'default' PvD">
         <t>
-PvD-aware system as a whole SHOULD have a notion of currently active default PvD
+Because there is always one specified provisioning domain to which an
+individual invocation of networking functionality is restricted
+(<xref target="hi_api"/>) there must necessarily exist a system "default PvD".
+This provisioning domain is the one which networking functionality MUST use
+when no other specified PvD can be determined.
         </t>
         <t>
-- makes "basic 6.1" trivial
-    - without this application behaviour will be highly system dependent (does the system iterate through PvDs, in some order, trying to find a PvD in which a certain op succeeds?)
-    - this is the PvD to use for operations for which a PvD must be selected and no explicity PvD API has been used
-    - as a matter of policy, this MAY be a "null" PvD, effectively requiring all apps to be PvD-aware, or "loopback" to permit locally communications only for non-PvD-aware apps
-    - SHOULD be a way to communicate changes in the default PvD
-    - MUST be able to specify that the default PvD is to be used
+Using the system's default PvD enables support of
+<eref target="https://tools.ietf.org/html/rfc7556#section-6.1">basic</eref>
+uses of the PvD API (i.e. backward compatibility for unmodified applications).
         </t>
-      <t>
-For backward compatibility for non-PvD-aware applications, there MUST exist a "default PvD", i.e. a PvD within which system functions requiring a PvD are to be performed.
-      </t>
-      <t>
-It is expected that most nodes will use a variety of information coupled with administrative policy to promote one of a number of currently active PvDs to be the default for ease of backward compatibility, and to
-promote another active PvD in its place as circumstances change.
-      </t>
-      </section>
-
-      <section anchor="unspec_pvd" title="XXX The 'unspecified' PvD">
-<t>TBD: 'PVD_UNSPEC'</t>
-      </section>
-
-      <section anchor="null_pvd" title="XXX The 'null' PvD">
         <t>
-Useful to ensure networking functions fail (and fail quickly)
-If there are no PvDs accessible to a user/group/application, either as a
-matter of policy (insufficient privileges) or as a matter of natural
-circumstance (the node is not connected to any network), the 'null' PvD may
-be a suitable PvD for the API to return to application queries or to apply as
-the PvD of use in the absence of other explicitly reference PvDs.
+The operating system MAY change the default PvD accordingly to policy. It is
+expected that nodes will use a variety of information, coupled with
+administrative policy, to promote one of any number of concurrently available
+PvDs to be the system's default PvD.
+        </t>
+        <t>
+          <list counter="reqs" hangIndent="4" style="format R%d">
+            <t>
+A PvD-aware API implementation MUST include a mechanism for applications to
+learn the programmatic reference to the system's concurrent default PvD.
+            </t>
+            <t>
+A PvD-aware API implementation SHOULD contain a mechanism enabling an
+application to be notified of changes to the concurrent default PvD
+in a comparatively efficient manner (i.e. more efficient than polling).
+            </t>
+          </list>
         </t>
       </section>
 
-      <section anchor="loopback_pvd" title="XXX The 'loopback' PvD">
+      <section anchor="unspec_pvd" title="The 'unspecified' PvD">
+        <t>
+An application may at some times wish to be specific about which PvD should be
+used for networking operations and at other times may prefer to defer the
+choice of specific PvD to one specified elsewhere (including the system
+default PvD).
+        </t>
+        <t>
+For example, if an application has <xref target="scoping">specified the PvD
+to be used for all functions called by its process and child processes</xref>,
+it may indicate that certain invocations should instead use the system default
+PvD by using a programmatic reference to the "unspecified PvD".
+
+          <list counter="reqs" hangIndent="4" style="format R%d">
+            <t>
+API implementors MUST reserve a programmatic reference to represent an
+"unspecified PvD": an indication that the application defers the selection of
+a specific PvD.
+            </t>
+            <t>
+When invoked without a specific PvD, or with a programmatic reference to the
+"unspecified PvD", networking functionality MUST find a specific PvD to be used
+by examining the successive encapsulating layers of possible specificity
+supported by the API (<xref target="scoping"/>), e.g. look first for a
+"fiber-specific default" PvD, then a "thread-specific default" PvD, a
+"process-specific default" PvD, and ultimately use the system's default PvD
+if no other specified PvD can be found.
+            </t>
+          </list>
+        </t>
+      </section>
+
+      <section anchor="null_pvd" title="The 'null' PvD">
+        <t>
+If there are no PvDs accessible to an application, whether as a matter of
+<xref target="policy">policy> (insufficient privileges)</xref> or as a matter
+of natural circumstance (the node is not connected to any network), the
+construct of a 'null' PvD may be useful to ensure networking functions fail
+(and fail quickly).
+          <list counter="reqs" hangIndent="4" style="format R%d">
+            <t>
+API implementors MAY reserve a programmatic reference to represent a
+"null PvD": an unchanging provisioning domain devoid of any and all
+networking configuration information.
+            </t>
+          </list>
+It is possible for operating systems to enforce that only PvD-aware
+applications can function normally by ensuring that the default PvD is
+always the "null PvD".
+        </t>
+      </section>
+
+      <section anchor="loopback_pvd" title="The 'loopback' PvD">
         <t>
 TBD: is it useful to have a "loopback" PvD, i.e. one consisting solely of all
 addresses configured on the node and all locally delivered routes?
