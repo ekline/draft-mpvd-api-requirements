@@ -157,7 +157,7 @@ and undoubtedly many more configuration elements yet to be specified (like
 metering hints, transmission medium and speed, captive portal URL, et cetera).
       </t>
       <t>
-This configuration information as whole may not be able to be learned
+This configuration information as a whole may not be able to be learned
 atomically, may need to be synthesized from multiple sources including
 administrative provisioning, and cannot be presumed to be unchanging over the
 lifetime of a node's association with a given PvD.
@@ -200,7 +200,7 @@ sendmsg(), there MUST be a means by which an application can specify the
 PvD within which networking operations are to be restricted.
             </t>
             <t>
-one and only specified scope per networking functionality invocation
+use one and only specified scope per networking functionality invocation
 <vspace blankLines="1"/>
 For every unique invocation of a networking API function, there MUST only be
 one specified PvD to which networking functionality is to be restricted.
@@ -212,7 +212,7 @@ its operations, even if that PvD is a
 <xref target="null_pvd">"null PvD"</xref>.
             </t>
             <t>
-consistent use of programmatic references to PvDs
+make consistent use of programmatic references to PvDs
 <vspace blankLines="1"/>
 For uniformity and simplicity, every PvD-aware API functional element
 SHOULD use (as return values of function calls, function arguments, et cetera)
@@ -228,7 +228,7 @@ with successive re-associations to the same PvD whereas PvD identifiers,
 by definition, will not.
             </t>
           </list>
-It is import to note that there is always a provisioning domain within which
+It is important to note that there is always a provisioning domain within which
 networking functionality is scoped. For simply-connected hosts this may be the
 <eref target="https://tools.ietf.org/html/rfc7556#section-2.2"
   >implicit PvD</eref> created by a single networking interface connected to a
@@ -287,7 +287,7 @@ application intervention is possible, as discussed in the following sections.
           <t>
 Whenever a source address is to be selected on behalf of an application it
 is essential for consistent use that only source addresses belonging to the
-currently scoped PvD be used a candidate set. (See <xref target="RFC6418">RFC
+specified PvD be used a candidate set. (See <xref target="RFC6418">RFC
 6418</xref> <eref target="https://tools.ietf.org/html/rfc6418#section-3.5"
   >section 3.5</eref> for references to issues arising from poor source
 address selection.)
@@ -300,10 +300,10 @@ is amended as follows:
             <list counter="reqs" hangIndent="4" style="format R%d">
               <t>
 The candidate source addresses MUST be restricted to the set of unicast
-addresses associated with the (explicitly or implicitly) specified PvD.
+addresses associated with the concurrently specified PvD.
 <vspace blankLines="1"/>
 Additionally, source address selection policies from PvDs other than the
-(explicitly or implicitly) specified PvD MUST NOT be applied.
+concurrently specified PvD MUST NOT be applied.
               </t>
             </list>
           </t>
@@ -311,12 +311,12 @@ Additionally, source address selection policies from PvDs other than the
 
         <section title="Route isolation">
           <t>
-Whenever a routing lookup for destination is to be performed, it is essential
-that only routes belonging to the currently scoped PvD be consulted.
-Applications and libraries that use the inherent routing reachability check
-(and subsequent source address selection) performed during something like the
-Sockets API connect() call on a UDP socket to learn reachability information
-cheaply cannot function correctly otherwise.
+Whenever a routing lookup for a given destination is to be performed, it is
+essential that only routes belonging to the currently specified PvD be
+consulted. Applications and libraries that use the inherent routing
+reachability check (and subsequent source address selection) performed during
+something like the Sockets API connect() call on a UDP socket to learn
+reachability information cheaply cannot function correctly otherwise.
 <xref target="RFC6418">RFC 6418</xref>
 <eref target="https://tools.ietf.org/html/rfc6418#section-4.2"
   >section 4.2</eref> contains more discussion and references to issues
@@ -328,7 +328,7 @@ For nodes following the PvD-aware End System Model:
             <list counter="reqs" hangIndent="4" style="format R%d">
               <t>
 The set of routes consulted for any routing decision MUST be restricted to the
-routes associated with the (explicitly or implicitly) specified PvD.
+routes associated with the concurrently specified PvD.
               </t>
             </list>
           </t>
@@ -350,11 +350,11 @@ assistance.
 For nodes following the PvD-aware End System Model:
             <list counter="reqs" hangIndent="4" style="format R%d">
               <t>
-For networking functionality performed on behalf of an application, the
+When performing networking functionality on behalf of an application, the
 supporting operating system MUST record and make available to the
 application either (1) all the information the application might need to make
-a PvD evaluation on its own or (2) the API's PvD programmatic reference
-directly.
+a determination of the applicable PvD on its own or (2) the API's PvD
+programmatic reference directly.
 <vspace blankLines="1"/>
 A supporting operating system SHOULD record and make
 available the API's PvD programmatic reference; other approaches invite
@@ -368,8 +368,9 @@ ambiguity among applications' interpretation of available information.
           <t>
 Frequently, operating systems have several additional supporting libraries and
 services for more advance networking functionality. Using the system's own
-PvD API, meeting the above requirements, it should be possible to extend them
-to provide correct per-PvD isolation of information and application support.
+PvD API, and fulfilling the above requirements, it should be possible to
+extend these services to provide correct per-PvD isolation of information and
+enable consistent application use of PvDs.
           </t>
         </section>
       </section>
@@ -445,7 +446,7 @@ if no other specified PvD can be found.
       <section anchor="null_pvd" title="The 'null' PvD">
         <t>
 If there are no PvDs accessible to an application, whether as a matter of
-<xref target="policy">policy> (insufficient privileges)</xref> or as a matter
+<xref target="policy">policy (insufficient privileges)</xref> or as a matter
 of natural circumstance (the node is not connected to any network), the
 construct of a 'null' PvD may be useful to ensure networking functions fail
 (and fail quickly).
@@ -457,8 +458,8 @@ networking configuration information.
             </t>
           </list>
 It is possible for operating systems to enforce that only PvD-aware
-applications can function normally by ensuring that the default PvD is
-always the "null PvD".
+applications may function normally by administratively configuring the default
+PvD to be the "null PvD".
         </t>
       </section>
 
@@ -471,7 +472,7 @@ addresses configured on the node and all locally delivered routes?
     </section>
 
     <section title="Requirements for new API functionality">
-      <section title="Learning of PvD availability">
+      <section title="Learning PvD availability">
         <t>
           <list counter="reqs" hangIndent="4" style="format R%d">
             <t>
@@ -561,20 +562,22 @@ at every granularity of "programming parallelization", i.e. not only
 per-process, but also per-thread, per-fiber, et cetera. At every supported
 layer of granularity, if no PvD reference has been set the next coarser
 layer's setting MUST be consulted (up to and including the system's
-default PvD).
+default PvD) when identifying the specified PvD to be used.
             </t>
             <t>
 For every degree of granularity at which an application may specify a
 "default PvD" there MUST exist a corresponding mechanism to retrieve any
 concurrently specified implementation-specific PvD programmatic reference.
+If no PvD has been specified for at the granularity of a given query, the
+"unspecified PvD" must be returned.
             </t>
           </list>
         </t>
         <t>
-With access this functionality it is possible to start non-PvD-aware apps
-within a single PvD context with no adverse impact. Furthermore, with judicious
-use of a sufficiently granular API existing general purpose networking APIs
-can be wrapped to appear PvD-aware.
+With access to this functionality it is possible to start non-PvD-aware
+applications within a single PvD context with no adverse impact. Furthermore,
+with judicious use of a sufficiently granular API, existing general purpose
+networking APIs can be wrapped to appear PvD-aware.
         </t>
       </section>
 
@@ -643,8 +646,8 @@ instance to another.
 
             <t>
 Whether two PvDs are "identical" is perhaps better left to applications to
-decide since PvD equivalence may alternatively be determined by successfully
-accessing some restricted resource.
+decide since "PvD equivalence" for a given application may alternatively be
+determined by successfully accessing some restricted resource.
             </t>
           </list>
         </t>
@@ -697,8 +700,8 @@ constrained to the DNS configuration within a specified PVD. This MUST be
 possible using at least the techniques of <xref target="scoping"/>.
         </t>
         <t>
-A few additional requirements are places on PvD-aware implementations of
-these functions:
+The following additional requirements are places on PvD-aware implementations
+of these functions:
           <list counter="reqs" hangIndent="4" style="format R%d">
             <t>
 All DNS protocol communications with a PvD's nameservers MUST be restricted
@@ -735,10 +738,10 @@ Additional thanks to the coffee shops of Tokyo.
 
     <section anchor="Security" title="Security Considerations">
       <t>
-A major new security impact of a PvD-aware API is that it becomes much simpler
-(by design) to write a functional application to create a bridging data path
-between two PvDs that would not have otherwise necessarily have been so easily
-connected.
+An important new security impact of a PvD-aware API is that it becomes much
+simpler (by design) to write a well-functioning application to create a
+bridging data path between two PvDs that would not otherwise have been so
+easily connected.
       </t>
       <t>
 For some operating systems, existing APIs already make this bridging
