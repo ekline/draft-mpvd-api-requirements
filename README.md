@@ -1,1 +1,1 @@
-Multiple Provisioning Domains Application Layer API
+Multiple Provisioning Domain (MPVD) Requirements for an Application Layer API
